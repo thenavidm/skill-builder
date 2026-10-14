@@ -1,0 +1,37 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "skill-builder",
+  "version": "0.0.1",
+  "description": "Skill creator for Claude Code and AI agents. Plans skills from a goal or from example repos, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI and Cursor, and packages one source into every tool's plugin.",
+  "author": {
+    "name": "Navid Moazzez",
+    "url": "https://navid.me"
+  },
+  "homepage": "https://github.com/thenavidm/skill-builder",
+  "repository": "https://github.com/thenavidm/skill-builder",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "skill-creator",
+    "claude-skills",
+    "claude-code-plugin",
+    "plugin-development",
+    "evals",
+    "prompt-engineering",
+    "codex",
+    "gemini-cli",
+    "cursor"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Skill Builder",
+        "shortDescription": "Build and test agent skills",
+        "longDescription": "Skill creator for Claude Code and AI agents. Plans skills from a goal or from example repos, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI and Cursor, and packages one source into every tool's plugin.",
+        "developerName": "Navid Moazzez",
+        "category": "Developer Tools",
+        "websiteURL": "https://github.com/thenavidm/skill-builder"
+      }
+    }
+  }
+}

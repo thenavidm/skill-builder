@@ -1,0 +1,39 @@
+{
+  "name": "@thenavidm/skill-builder",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Skill creator for Claude Code and AI agents. Plan, write, check, eval, benchmark, package, and publish agent skills and plugins for every AI tool.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Navid Moazzez (https://navid.me)",
+  "homepage": "https://github.com/thenavidm/skill-builder",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thenavidm/skill-builder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thenavidm/skill-builder/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build:manifests": "node scripts/manifests/build.mjs",
+    "check:manifests": "node scripts/manifests/build.mjs --check"
+  },
+  "keywords": [
+    "agent-skills",
+    "skill-creator",
+    "claude-skills",
+    "claude-code-plugin",
+    "plugin-development",
+    "evals",
+    "prompt-engineering",
+    "codex",
+    "gemini-cli",
+    "cursor"
+  ],
+  "contributors": [
+    "Navid Moazzez (https://navid.me)"
+  ]
+}

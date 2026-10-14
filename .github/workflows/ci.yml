@@ -1,0 +1,30 @@
+name: CI
+
+# Private repositories spend paid Actions minutes, so while this one is private
+# CI runs only on pushes to main, pull requests to main and by hand, as one
+# short Linux job. GitHub rounds each job up to a whole minute.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A superseded check is cancelled so it stops spending minutes.
+  cancel-in-progress: true
+
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Every AI tool's manifest is built from product.json, so a hand edit to
+      # one, or a skill another tool would reject, fails here instead of in a
+      # user's install.
+      - run: node scripts/manifests/build.mjs --check
