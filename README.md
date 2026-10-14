@@ -1,11 +1,11 @@
-# Skill Builder: Skill Creator for Claude Code, Codex and AI Agents
+# Skill Builder: Skill Creator Plugin and Skills for Claude Code, Codex and AI Agents
 
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 [![YouTube](https://img.shields.io/badge/YouTube-@thenavidm-red?logo=youtube&logoColor=white)](https://youtube.com/@thenavidm?sub_confirmation=1)
 [![X](https://img.shields.io/badge/X-@thenavidm-black?logo=x)](https://x.com/thenavidm)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-thenavidm-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/thenavidm)
 
-Skill creator for Claude Code, Codex and AI agents. Plan, write, check, eval, benchmark, package and publish agent skills and plugins that work in every AI tool.
+Skill creator plugin and skills for Claude Code, Codex and AI agents. Plan, write, check, eval, benchmark, package, and publish agent skills and plugins for every AI tool.
 
 > **Not published yet.** Skill Builder is in development and private. This README is the specification for the first release: every skill and agent below is built to it, and each one ships only after it passes its evals. What is built so far is in the [changelog](CHANGELOG.md).
 

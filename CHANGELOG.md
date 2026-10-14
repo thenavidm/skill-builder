@@ -4,6 +4,10 @@ Newest first.
 
 ## Unreleased
 
+### Changed
+
+- The title, the README's first line, the GitHub description and every manifest now say the same thing in the same words: a plugin and skills for Claude Code, Codex and AI agents.
+
 ### Added
 
 - The README, which is the specification for the first release: every skill and agent, how each one starts, the evidence rules, and install steps for Claude Code, Codex, Gemini CLI, Cursor and the `skills` CLI.

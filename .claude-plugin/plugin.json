@@ -2,7 +2,7 @@
   "name": "skill-builder",
   "displayName": "Skill Builder",
   "version": "0.0.1",
-  "description": "Skill creator for Claude Code and AI agents. Plans skills from a goal or from example repos, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI and Cursor, and packages one source into every tool's plugin.",
+  "description": "Skill creator plugin and skills for Claude Code, Codex and AI agents. Plans skills from a goal or from example repos, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI and Cursor, and packages one source into every tool's plugin.",
   "author": {
     "name": "Navid Moazzez",
     "url": "https://navid.me"

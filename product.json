@@ -2,7 +2,7 @@
   "$comment": "The one source for every AI tool's manifest. Edit it here, then run `node scripts/manifests/build.mjs`; CI runs the same script with --check. The version always comes from package.json.",
   "name": "skill-builder",
   "displayName": "Skill Builder",
-  "description": "Skill creator for Claude Code and AI agents. Plans skills from a goal or from example repos, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI and Cursor, and packages one source into every tool's plugin.",
+  "description": "Skill creator plugin and skills for Claude Code, Codex and AI agents. Plans skills from a goal or from example repos, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI and Cursor, and packages one source into every tool's plugin.",
   "shortDescription": "Build and test agent skills",
   "author": {
     "name": "Navid Moazzez",
