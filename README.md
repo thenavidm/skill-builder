@@ -17,7 +17,7 @@ A skill that only works in one tool, or only on the prompt you tried, is not fin
 
 Code does the validating, the counting and the statistics, so the same skill gets the same result every time. The model only judges what needs judgment, such as whether an output answered the task, and says when it did. Every format rule it uses names the tool's own documentation and the date it was checked.
 
-It has 18 skills and 7 agents, and works in Claude Code, Codex, Gemini CLI and Cursor.
+It has 18 skills and 7 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
 
 Built by [Navid Moazzez](https://navid.me).
 
@@ -128,6 +128,14 @@ Or run `codex`, type `/plugins`, and install Skill Builder from the marketplace 
 ```bash
 gemini extensions install https://github.com/thenavidm/skill-builder --auto-update
 ```
+
+**Antigravity**
+
+```bash
+agy plugin install https://github.com/thenavidm/skill-builder
+```
+
+That is the Antigravity CLI. For the Antigravity app, copy the repository folder into `~/.gemini/config/plugins/` for every workspace, or into `.agents/plugins/` for one project. Antigravity gets the skills.
 
 **Cursor**
 
