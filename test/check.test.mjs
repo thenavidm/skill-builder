@@ -181,3 +181,19 @@ describe("real-world frontmatter", () => {
     assert.deepEqual(codes(skill("a", `name: a\n${OK}`, "Open [the harness](HARNESS_URL).\n")), []);
   });
 });
+
+describe("secrets in what ships", () => {
+  it("fails a .env file and a pasted key, says what kind, and never prints the key", () => {
+    const fake = "sk-" + "a1B2c3D4e5F6g7H8i9J0k1L2m3N4";
+    const dir = skill("a", `name: a\n${OK}`, "Run the script.\n", { ".env": "ELEVENLABS_API_KEY=abc", "scripts/run.py": `KEY = "${fake}"\n`, ".env.example": "ELEVENLABS_API_KEY=your-key-here\n" });
+    const fs = checkSkill(dir).filter((f) => f.code.startsWith("secret"));
+    assert.deepEqual(fs.map((f) => f.code).sort(), ["secret", "secret-file"]);
+    const key = fs.find((f) => f.code === "secret");
+    assert.match(key.message, /OpenAI or Anthropic API key/);
+    assert.ok(!JSON.stringify(fs).includes(fake), "the key itself is never in a finding");
+  });
+  it("leaves placeholders alone", () => {
+    const dir = skill("a", `name: a\n${OK}`, "Set `OPENAI_API_KEY=your-key-goes-here-please` first.\n");
+    assert.ok(!codes(dir).some((c) => c.includes("secret")));
+  });
+});
