@@ -1,0 +1,437 @@
+[
+  {
+    "id": "skills.agent-skills.fields",
+    "claim": "The Agent Skills standard defines six frontmatter fields: name and description are required; license, compatibility, metadata and allowed-tools are optional.",
+    "value": {
+      "required": [
+        "name",
+        "description"
+      ],
+      "optional": [
+        "license",
+        "compatibility",
+        "metadata",
+        "allowed-tools"
+      ],
+      "nameMax": 64,
+      "namePattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "nameMatchesFolder": true,
+      "descriptionMax": 1024,
+      "compatibilityMax": 500,
+      "metadata": "map of string keys to string values",
+      "allowedTools": "space-separated string, experimental"
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "agent-skills"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://agentskills.io/specification",
+        "title": "Agent Skills specification",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "The name may not start or end with a hyphen or contain two in a row, which the pattern encodes."
+  },
+  {
+    "id": "skills.agent-skills.size",
+    "claim": "The standard recommends keeping SKILL.md under 500 lines and its instructions under about 5,000 tokens, with file references one level deep from SKILL.md, written as relative paths.",
+    "value": {
+      "maxLines": 500,
+      "maxInstructionTokens": 5000,
+      "referenceDepth": 1
+    },
+    "evidenceLevel": "official-guidance",
+    "surfaces": [
+      "agent-skills"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://agentskills.io/specification",
+        "title": "Agent Skills specification",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": null
+  },
+  {
+    "id": "skills.claude-code.fields",
+    "claim": "Claude Code reads twenty skill frontmatter fields, all optional: the standard's six plus when_to_use, argument-hint, arguments, disable-model-invocation, user-invocable, disallowed-tools, model, effort, context, agent, background, hooks, paths and shell.",
+    "value": {
+      "fields": [
+        "name",
+        "description",
+        "when_to_use",
+        "argument-hint",
+        "arguments",
+        "disable-model-invocation",
+        "user-invocable",
+        "allowed-tools",
+        "disallowed-tools",
+        "model",
+        "effort",
+        "context",
+        "agent",
+        "background",
+        "hooks",
+        "paths",
+        "shell",
+        "metadata",
+        "license",
+        "compatibility"
+      ],
+      "manualOnly": {
+        "field": "disable-model-invocation",
+        "value": true
+      },
+      "listingMax": 1536
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "claude-code"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/skills",
+        "title": "Claude Code: skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "The listing shows description and when_to_use together, cut at 1,536 characters. There is no field named auto-activate."
+  },
+  {
+    "id": "skills.claude-code.unknown-fields",
+    "claim": "Claude Code ignores a frontmatter field it does not know, without an error, so a misspelled or invented field silently does nothing.",
+    "value": null,
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "claude-code"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/skills",
+        "title": "Claude Code: skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "This is why check reports fields that no tool reads: nothing else will."
+  },
+  {
+    "id": "skills.claude-code.substitutions",
+    "claim": "Claude Code replaces $ARGUMENTS (all arguments), $ARGUMENTS[N] and $N (one argument, from 0), named $arguments, ${CLAUDE_SESSION_ID} and ${CLAUDE_SKILL_DIR} in a skill, and runs !`command` blocks before the skill reaches the model.",
+    "value": {
+      "all": "$ARGUMENTS",
+      "first": "$0",
+      "skillDir": "${CLAUDE_SKILL_DIR}",
+      "injection": "!`command`"
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "claude-code"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/skills",
+        "title": "Claude Code: skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "$0 is the first argument only, not every argument. None of these are part of the Agent Skills standard, so a portable skill gives a plain-words fallback."
+  },
+  {
+    "id": "skills.codex.fields",
+    "claim": "Codex requires name and description in SKILL.md and documents no other frontmatter fields. UI details and implicit invocation live in an optional agents/openai.yaml next to it.",
+    "value": {
+      "required": [
+        "name",
+        "description"
+      ],
+      "sidecar": "agents/openai.yaml",
+      "manualOnly": {
+        "file": "agents/openai.yaml",
+        "path": "policy.allow_implicit_invocation",
+        "value": false
+      }
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "codex"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://learn.chatgpt.com/docs/build-skills",
+        "title": "Codex: build skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "With allow_implicit_invocation false, Codex never picks the skill from a prompt, but $skill-name still runs it."
+  },
+  {
+    "id": "skills.codex.listing-budget",
+    "claim": "Codex spends at most 2% of the model's context window on its list of skills by default and shortens descriptions first; on a Mac with more than 160 skills installed, Codex 0.159.3 removed every description and left 164 skills out of the list.",
+    "value": {
+      "budgetShare": 0.02,
+      "maxConfigurableTokens": 10000
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "codex"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://learn.chatgpt.com/docs/build-skills",
+        "title": "Codex: build skills",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: codex exec on a Mac with many skills installed",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "The warning Codex printed: 'Exceeded skills context budget. All skill descriptions were removed and 164 additional skills were not included in the model-visible skills list.' This is why tokens reports the listing cost of every skill."
+  },
+  {
+    "id": "skills.cursor.fields",
+    "claim": "Cursor reads name and description (required), disable-model-invocation, paths, icon, color and metadata, and the older globs as a fallback.",
+    "value": {
+      "fields": [
+        "name",
+        "description",
+        "disable-model-invocation",
+        "paths",
+        "icon",
+        "color",
+        "metadata",
+        "globs"
+      ],
+      "manualOnly": {
+        "field": "disable-model-invocation",
+        "value": true
+      }
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "cursor"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://cursor.com/docs/context/skills",
+        "title": "Cursor: agent skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "Not confirmed on a real Cursor install: its CLI is not on the test Mac."
+  },
+  {
+    "id": "skills.antigravity.fields",
+    "claim": "Antigravity requires name and description in SKILL.md, and reads a plugin's skills from skills/<name>/SKILL.md.",
+    "value": {
+      "required": [
+        "name",
+        "description"
+      ]
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "antigravity"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://antigravity.google/docs/skills",
+        "title": "Antigravity: skills (the same text ships inside the app as agy-customizations/docs/skills.md, app 2.3.1)",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "No field for running a skill only when asked."
+  },
+  {
+    "id": "skills.extra-fields.tolerated",
+    "claim": "Claude Code 2.1.299, Codex 0.159.3 and the Antigravity CLI 1.4.2 each still load a skill whose frontmatter carries fields they do not use (when_to_use, argument-hint, disable-model-invocation, an invented auto-activate, metadata).",
+    "value": {
+      "loaded": [
+        "claude-code",
+        "codex",
+        "antigravity"
+      ],
+      "notTested": [
+        "gemini-cli",
+        "cursor"
+      ]
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "claude-code",
+      "codex",
+      "antigravity"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: two skills, one plain and one with extra fields, listed headless by each tool",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "Each tool was asked to list its skills in a folder holding both. Gemini CLI 0.62.0 could not run: Google closed it to free personal accounts (reason UNSUPPORTED_CLIENT). So a tool-specific field such as disable-model-invocation is safe to ship in a shared SKILL.md."
+  },
+  {
+    "id": "skills.locations",
+    "claim": "Each tool reads project skills from its own folder: Claude Code from .claude/skills; Codex, Antigravity and Cursor from .agents/skills; Gemini CLI from .gemini/skills or .agents/skills. Cursor also reads Claude Code's and Codex's folders.",
+    "value": {
+      "claude-code": [
+        ".claude/skills"
+      ],
+      "codex": [
+        ".agents/skills"
+      ],
+      "antigravity": [
+        ".agents/skills"
+      ],
+      "gemini-cli": [
+        ".gemini/skills",
+        ".agents/skills"
+      ],
+      "cursor": [
+        ".agents/skills",
+        ".cursor/skills"
+      ]
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "claude-code",
+      "codex",
+      "antigravity",
+      "gemini-cli",
+      "cursor"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/skills",
+        "title": "Claude Code: skills",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://learn.chatgpt.com/docs/build-skills",
+        "title": "Codex: build skills",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://geminicli.com/docs/cli/skills/",
+        "title": "Gemini CLI: skills",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://cursor.com/docs/context/skills",
+        "title": "Cursor: agent skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "Antigravity's .agents/skills was confirmed by the field test above, where it listed skills from that folder."
+  },
+  {
+    "id": "skills.gemini-cli.individuals-closed",
+    "claim": "Gemini CLI 0.62.0 refuses to run for a free personal Google account and points to Antigravity instead.",
+    "value": {
+      "reasonCode": "UNSUPPORTED_CLIENT"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "gemini-cli"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: gemini -p on a personal account",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "Paid and API-key accounts still run it. bench skips Gemini CLI without a key and says why."
+  },
+  {
+    "id": "skills.yaml.unquoted-colon",
+    "claim": "Claude Code 2.1.299, Codex 0.159.3 and the Antigravity CLI 1.4.2 each still load a skill whose description holds an unquoted \": \" (for example \"Use when: ...\"), which a strict YAML reader rejects as a second key.",
+    "value": {
+      "loaded": [
+        "claude-code",
+        "codex",
+        "antigravity"
+      ],
+      "notTested": [
+        "gemini-cli",
+        "cursor"
+      ]
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "claude-code",
+      "codex",
+      "antigravity"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: one skill with the colon quoted and one without, listed headless by each tool",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "So check reports it as a warning, not an error: the skill loads where tested, and quoting the value makes it safe in every YAML reader. 37 of 1,295 skills on the test Mac had it."
+  },
+  {
+    "id": "skills.claude-code.listing-budget",
+    "claim": "Claude Code fits the list of skill names and descriptions into a budget of 1% of the model's context window; when the list overflows it keeps every name but drops descriptions, starting with the skills invoked least.",
+    "value": {
+      "budgetShare": 0.01,
+      "settings": [
+        "skillListingBudgetFraction",
+        "SLASH_COMMAND_TOOL_CHAR_BUDGET",
+        "skillListingMaxDescChars",
+        "skillOverrides"
+      ]
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "claude-code"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/skills",
+        "title": "Claude Code: skills, 'Skill descriptions are cut short'",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "On the test Mac (Opus 5.5, a 1,000,000-token window, 260 skills installed), /context put the Skills row at 9.9k tokens, which matches a budget of 1% counted in tokens, and showed many skills as name-only. A skill without its description in the list can't be matched to a request, so a plugin's listing cost decides whether its skills still trigger."
+  }
+]

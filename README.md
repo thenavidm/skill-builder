@@ -19,7 +19,7 @@ A skill that only works in one tool, or only on the prompt you tried, is not fin
 
 Code does the validating, the counting and the statistics, so the same skill gets the same result every time. The model only judges what needs judgment, such as whether an output answered the task, and says when it did. Every format rule it uses names the tool's own documentation and the date it was checked.
 
-It has 20 skills and 7 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
+It has 24 skills and 8 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
 
 Built by [Navid Moazzez](https://navid.me).
 
@@ -40,6 +40,17 @@ Packaged for every tool from product.json. Not published.
 ```
 
 The output above shows the shape on an example skill. Every number in it is invented.
+
+This one is real: the engine on 19 October 2026, testing a small skill that sets a team's style for dates, on two tasks, with and without the skill, in three tools.
+
+```
+$ skill-builder bench house-dates --runs 1
+tool           with  without  change
+Claude Code    100%      58%     +42
+Codex          100%      25%     +75
+Antigravity    100%      n/a     n/a
+Antigravity: 2 runs stopped on a permission headless mode can't ask for, and are left out.
+```
 
 ## How you use it
 
@@ -73,9 +84,12 @@ Commands are written `/skill ...` here. In Claude Code and Codex the full name c
 | The same evals in Claude Code, Codex, Gemini CLI and Cursor | `/skill bench` |
 | What a skill costs in tokens | `/skill tokens` |
 | One source packaged into every tool's plugin | `/skill package` |
+| A whole plugin from a goal: its skills, agents and entry skill | `/skill plugin` |
+| A repository set up with every file a release needs | `/skill repo` |
 | A repository published to a clear standard | `/skill publish` |
+| A release that reaches every user: version, notes, manifests | `/skill release` |
 
-All 20 skills are in [section 5](#5-skills), and all 7 agents in [section 6](#6-agents).
+All 24 skills are in [section 5](#5-skills), and all 8 agents in [section 6](#6-agents).
 
 ## Contents
 
@@ -85,8 +99,8 @@ All 20 skills are in [section 5](#5-skills), and all 7 agents in [section 6](#6-
 | 2 | [Install](#2-install) | Every AI tool, copy and paste |
 | 3 | [Set up](#3-set-up) | One interview, saved for every skill |
 | 4 | [How a skill is built](#4-how-a-skill-is-built) | Plan, write, check, test, measure, package |
-| 5 | [Skills](#5-skills) | All 20, grouped by job |
-| 6 | [Agents](#6-agents) | All 7, and what each returns |
+| 5 | [Skills](#5-skills) | All 24, grouped by job |
+| 6 | [Agents](#6-agents) | All 8, and what each returns |
 | 7 | [Evidence](#7-evidence) | Every format rule and where it comes from |
 | 8 | [Your data](#8-your-data) | What is stored, and where |
 | 9 | [Notes and gotchas](#9-notes-and-gotchas) | What catches people out |
@@ -201,13 +215,14 @@ Run `/skill setup` once in your project. It asks a short interview and writes th
 
 ## 5. Skills
 
-Skill Builder has 20 skills, each a folder in `skills/` with a `SKILL.md` your AI tool loads only when the job needs it. Every skill also works without agents, so results are the same in every AI tool. Skills marked **Release 1** ship first.
+Skill Builder has 24 skills, each a folder in `skills/` with a `SKILL.md` your AI tool loads only when the job needs it. Every skill also works without agents, so results are the same in every AI tool. Skills marked **Release 1** ship first.
 
 ### Start and plan
 
 | Skill | Command | What it does | Ships in |
 |---|---|---|---|
 | `skill` | `/skill` | The entry point. Routes every command, runs `setup` and `doctor`, and answers "which command do I need?" | Release 1 |
+| `skill-plugin` | `/skill plugin` | A whole plugin from a goal or example repos: the skills and agents planned and written, an entry skill that routes to them, and a routing test proving each prompt reaches the right sibling in each tool | Release 1 |
 | `skill-plan` | `/skill plan` | A plan from a goal or from example repos: a teardown of each, a table of what each covers, and the skills and agents a better one needs | Release 1 |
 | `skill-compete` | `/skill compete` | A skill or plugin you point at, from GitHub, skills.sh, agentskills.io, your disk or pasted: taken apart, ours built from scratch, both run on the same evals with the numbers side by side, its licence read, and a check that none of its text came across | Release 1 |
 
@@ -236,9 +251,12 @@ Skill Builder has 20 skills, each a folder in `skills/` with a `SKILL.md` your A
 
 | Skill | Command | What it does | Ships in |
 |---|---|---|---|
-| `skill-improve` | `/skill improve` | A rewrite from eval failures and your feedback, then the evals again | Release 1 |
+| `skill-improve` | `/skill improve` | A rewrite from eval failures and your feedback, proven on the failing case and everything that passed before | Release 1 |
+| `skill-tidy` | `/skill tidy` | A skill that works but grew long, repetitive or stale, tidied without changing what it does, proven by the same eval results with fewer tokens | Release 1 |
 | `skill-learn` | `/skill learn` | Corrections and lessons from this chat, a brief or a skill's recent runs, each applied to every skill it touches across your repos, sorted by how sure it is. It asks whether each is a rule for the skill or a principle for memory, shows a diff per file for your yes, bumps each skill's version, and runs the affected evals again so nothing regresses | Release 1 |
 | `skill-package` | `/skill package` | One `product.json` built into the manifests for Claude Code, Codex, Gemini CLI, Cursor and the `skills` CLI, and checked in CI | Release 1 |
+| `skill-repo` | `/skill repo` | A repository set up with every file a published plugin needs, its manifests built and checked, so it passes each tool's own validator from the first commit | Release 1 |
+| `skill-release` | `/skill release` | The version bumped, the changelog notes moved under it, every manifest rebuilt, then the tag, the GitHub release and npm, each for your yes | Release 1 |
 | `skill-publish` | `/skill publish` | A repository with a README, a description and topics people search for, a changelog, version tags and a release | Release 1 |
 | `skill-convert` | `/skill convert` | A skill written for one tool made portable: tool-only paths, fields and commands replaced | Release 2 |
 | `skill-update` | `/skill update` | Facts checked again and evals run again on a schedule, so a skill does not go stale, and a watch on every skill you competed with: when it changes, the comparison runs again | Release 2 |
@@ -277,6 +295,7 @@ Codex has no agents in plugins, so there the skill does each agent's steps itsel
 | `skill-comparator` | `skill-eval`, `skill-improve`, `skill-compete` | Compares two versions' outputs without knowing which is which, and says which is better and why | `compare-<date>.json` |
 | `skill-analyzer` | `skill-eval`, `skill-bench` | Finds the patterns in the results: which prompts fail, which assertions never discriminate, where runs disagree | `benchmark-<date>.json` |
 | `skill-fact-checker` | `skill-create`, `skill-facts` | Lists every claim a skill makes and the source behind it, or "none" | `claims-<skill>-<date>.json` |
+| `skill-reviewer` | `skill-create`, `skill-improve` | Reads a drafted skill cold, the way a model will, against its confirmed plan, and sorts what it finds into blockers, fixes and later | `review-<round>.md` |
 
 ## 7. Evidence
 
@@ -363,7 +382,7 @@ Run `/skill doctor` first. It checks Node, the scripts and which AI tools it can
 <details>
 <summary><b>What is Skill Builder?</b></summary>
 
-Skill Builder is a plugin that helps your AI tool build agent skills and plugins: it plans them, writes them to the Agent Skills standard, checks them in code, tests them with and without the skill, measures them in every AI tool, and packages and publishes them.
+A plugin that builds agent skills and whole plugins, and proves they work. It plans them, writes them to the Agent Skills standard, checks them in code against each AI tool's own rules, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI, Antigravity and Cursor, then sets up, packages and releases the repository.
 
 </details>
 
@@ -375,23 +394,99 @@ A plugin is a bundle you install into your AI tool. A skill is a set of instruct
 </details>
 
 <details>
-<summary><b>Which AI tools do the skills it builds work in?</b></summary>
+<summary><b>Why doesn't my skill trigger?</b></summary>
 
-The skills it builds work in Claude Code, Codex, Gemini CLI, Cursor and every tool the `skills` CLI supports, and `skill-bench` proves it in each one you use.
+Three causes, in the order we see them.
 
-</details>
-
-<details>
-<summary><b>Can it fix a skill I already have?</b></summary>
-
-It can. `/skill review` audits it, `/skill description` fixes triggering, `/skill convert` makes it portable, and `/skill improve` rewrites it from its eval failures.
+1. **The list of skills is full.** Claude Code fits every skill's name and description into 1% of the model's context window, and Codex into 2%. Past that, descriptions are dropped (in Claude Code, the least-used skills' first), and a skill without its description can't be matched to a request. On a 200,000-token model, one 27-skill plugin we measured needs 168% of Claude Code's budget on its own. `/skill tokens` shows what yours cost.
+2. **The name says nothing.** In our tests, clear names routed every prompt to the right skill in Claude Code, Codex and Antigravity, even with vague descriptions. With vague descriptions and names like `helper-one`, routing fell to 88%, 63% and 50%.
+3. **The description leads with the wrong words.** `/skill description` tests it on prompts that should fire it and prompts that shouldn't, in each tool, and rewrites it until it does.
 
 </details>
 
 <details>
-<summary><b>Does it cost anything?</b></summary>
+<summary><b>How many skills can I install before they stop working?</b></summary>
 
-Skill Builder is free. It is MIT licensed. You pay for your own AI tool, and evals use its tokens.
+There is no fixed number. It depends on the model's context window and on how long every installed description is. A model with a 1,000,000-token window has five times the room of a 200,000-token one. `/skill tokens` shows each skill's cost on every message and the whole set's share of each tool's budget, so you can see the list fill before skills go quiet.
+
+</details>
+
+<details>
+<summary><b>I set a field in my skill and nothing changed. Why?</b></summary>
+
+Claude Code skips a frontmatter field it doesn't know, without an error. A field no tool reads, such as `auto-activate`, or a misspelling, such as `user-invokable`, does nothing and nothing tells you. On one computer we found that misspelling in 32 skills. `/skill check` names every field no tool reads, and what to use instead.
+
+</details>
+
+<details>
+<summary><b>How do I make a skill run only when I ask for it?</b></summary>
+
+Each tool has its own switch: `disable-model-invocation: true` in SKILL.md for Claude Code and Cursor, and `allow_implicit_invocation: false` in `agents/openai.yaml` for Codex. Write the first; `/skill package` writes the second for you. Gemini CLI and Antigravity have no switch yet, so for them the description says when the skill is for.
+
+</details>
+
+<details>
+<summary><b>Will a skill I wrote for Claude Code work in Codex, Gemini CLI or Antigravity?</b></summary>
+
+Usually, as long as it avoids what only one tool has: `${CLAUDE_SKILL_DIR}`, `$ARGUMENTS`, commands that run before the skill loads, folders such as `~/.claude/`, and commands that exist on macOS only. `/skill check` finds each one and says what works everywhere. `/skill bench` then runs the skill's evals in every tool you have, so "it works in Codex too" is a number.
+
+</details>
+
+<details>
+<summary><b>Is it safe to run the tests?</b></summary>
+
+Each run gets its own throwaway folder and can write only there: Codex in its workspace-write sandbox, Claude Code with edits accepted, Antigravity in its accept-edits mode. Skill Builder never switches permission checks off. A run that stops because headless mode can't ask for a permission is marked blocked and left out of the numbers, so it can't pass for a failure of the skill.
+
+The runs can see the rest of your computer. A run without the skill may find your other skills, which keeps the comparison true to what you would see.
+
+</details>
+
+<details>
+<summary><b>How are the outputs graded, and can a grader get it wrong?</b></summary>
+
+Code grades everything code can (a file is written, contains something, matches a pattern, is valid JSON), so those grades come out the same on every run. A model grades only what needs judgment, and its grade counts only if it quotes the output and the quote is really there. Assertions that pass as often without the skill as with it are named, because they prove nothing about the skill.
+
+</details>
+
+<details>
+<summary><b>What does it cost?</b></summary>
+
+Skill Builder is free and MIT licensed. The tests run in your own AI tool, on your own account, so they use its tokens. Every command that runs prompts says how many runs it will make before it starts, and a trigger test stops each run as soon as it knows which skill fired: 24 runs across three tools take about a minute.
+
+</details>
+
+<details>
+<summary><b>Can it build a whole plugin and set up the repository?</b></summary>
+
+Yes. `/skill plugin` plans and writes the skills, the agents and the entry skill that routes to them. `/skill repo` writes everything a published plugin needs: the README as its specification, a licence, a changelog, how to report a bug and a vulnerability, CI, search topics, and one `product.json` that builds every tool's manifest. A repository it writes passes Claude Code's, Gemini CLI's and Antigravity's own validators from the first commit.
+
+</details>
+
+<details>
+<summary><b>How do I release an update so people actually get it?</b></summary>
+
+Every tool decides that a copy is out of date from the version number, so a release that keeps the old number reaches no one. `/skill release` bumps the version, moves the changelog notes under it, rebuilds every manifest, then lists the tag, the push, the GitHub release and npm, each for your yes.
+
+</details>
+
+<details>
+<summary><b>Someone sent me a skill. Can I check it before I install it?</b></summary>
+
+Yes. `/skill check` reads it without running anything: fields that do nothing, files it points to that aren't there, commands for one system only, and secrets. Shared skill folders sometimes carry a `.env` file with live keys. Check fails that, and keys pasted into files, naming the file and the kind of key, never the key itself.
+
+</details>
+
+<details>
+<summary><b>Does it work on Windows?</b></summary>
+
+Its checks are plain Node and run wherever Node 22 does. Running prompts in each AI tool is tested on macOS so far, and is checked on Windows before the first release.
+
+</details>
+
+<details>
+<summary><b>Does it send my skills anywhere?</b></summary>
+
+No. Nothing is uploaded and there is no telemetry. Everything runs on your computer, in your own AI tool.
 
 </details>
 

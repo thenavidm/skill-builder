@@ -1,0 +1,184 @@
+[
+  {
+    "id": "tools.claude-code.headless",
+    "claim": "Claude Code runs one prompt headless with `claude -p <prompt> --output-format stream-json --verbose`; when a skill runs, the stream carries a tool call named Skill whose input names the skill.",
+    "value": {
+      "bin": "claude",
+      "args": [
+        "-p",
+        "{prompt}",
+        "--output-format",
+        "stream-json",
+        "--verbose"
+      ],
+      "skillDir": ".claude/skills",
+      "fired": "assistant message, tool_use name Skill, input.skill"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "claude-code"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/cli-reference",
+        "title": "Claude Code: CLI reference",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: Claude Code 2.1.299 asked to run a test skill",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "Observed event: tool_use Skill {\"skill\":\"fieldcheck-plain\"}. A plugin's skill may carry the plugin's prefix (plugin:skill), which trigger strips."
+  },
+  {
+    "id": "tools.codex.headless",
+    "claim": "Codex runs one prompt headless with `codex exec --skip-git-repo-check --json <prompt>`, and only once its standard input is closed; when a skill runs, Codex reads the skill's SKILL.md with a shell command, which the event stream shows.",
+    "value": {
+      "bin": "codex",
+      "args": [
+        "exec",
+        "--skip-git-repo-check",
+        "--json",
+        "{prompt}"
+      ],
+      "stdin": "closed",
+      "skillDir": ".agents/skills",
+      "fired": "item command_execution whose command reads <name>/SKILL.md"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "codex"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://learn.chatgpt.com/docs/build-skills",
+        "title": "Codex: build skills",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: Codex 0.159.3 asked to run a test skill",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "With --json and standard input left open, codex exec 0.159.3 waited and printed nothing; with it closed it ran at once. Observed event: command_execution \"cat .agents/skills/fieldcheck-plain/SKILL.md\"."
+  },
+  {
+    "id": "tools.antigravity.headless",
+    "claim": "The Antigravity CLI runs one prompt headless with `agy -p <prompt> --output-format stream-json`; when a skill runs, a view_file step opens the skill's SKILL.md.",
+    "value": {
+      "bin": "agy",
+      "args": [
+        "-p",
+        "{prompt}",
+        "--output-format",
+        "stream-json",
+        "--print-timeout",
+        "{timeout}s"
+      ],
+      "skillDir": ".agents/skills",
+      "fired": "step_update tool_name view_file, AbsolutePath ending <name>/SKILL.md"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "antigravity"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://antigravity.google/docs/cli/headless",
+        "title": "Antigravity CLI: headless mode",
+        "published": null,
+        "checked": "2026-10-19"
+      },
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: Antigravity CLI 1.4.2 asked to run a test skill",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": null
+  },
+  {
+    "id": "tools.gemini-cli.headless",
+    "claim": "Gemini CLI activates a skill by calling its activate_skill tool.",
+    "value": {
+      "bin": "gemini",
+      "args": [
+        "-p",
+        "{prompt}",
+        "--output-format",
+        "stream-json"
+      ],
+      "skillDir": ".agents/skills",
+      "fired": "tool call activate_skill"
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "gemini-cli"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://geminicli.com/docs/cli/skills/",
+        "title": "Gemini CLI: skills",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "Not run here: Gemini CLI 0.62.0 refuses free personal accounts (skills.gemini-cli.individuals-closed). The stream-json event shape for activate_skill is not confirmed, so trigger marks Gemini results unverified."
+  },
+  {
+    "id": "tools.antigravity.validate-agents-md",
+    "claim": "Antigravity's plugin validator (agy plugin validate --strict, CLI 1.4.2) warns that a plugin's root AGENTS.md is never loaded, because a plugin's rules load only from rules/; without --strict it passes.",
+    "value": {
+      "strictWarning": "AGENTS.md never loaded"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "antigravity"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: agy plugin validate on a repository written by skill-builder repo new",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "The root AGENTS.md is the guide for agents working on the repository (Codex and others read it there), not a rule for the plugin's users, so it stays where it is and the strict warning is expected."
+  },
+  {
+    "id": "tools.headless.blocked",
+    "claim": "In headless mode a tool can't ask for a permission, so it refuses it; the Antigravity CLI 1.4.2 then stopped with no answer, printing that a tool needing the command permission was auto-denied.",
+    "value": {
+      "antigravity": "jetski: no output produced, a tool required the \"command\" permission that headless mode cannot prompt for, so it was auto-denied"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "antigravity",
+      "claude-code",
+      "codex"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: the same eval without a skill, where the model reached for ls and find",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "eval and trigger mark such a run blocked and leave it out of the numbers: it measured the permission, not the skill. Skipping permission checks would hide it but gives a model in someone else's folder every tool, so the engine never does that."
+  }
+]

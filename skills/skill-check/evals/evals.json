@@ -1,0 +1,17 @@
+{
+  "evals": [
+    {
+      "name": "fix-a-broken-skill",
+      "prompt": "Check the skill in the notes-helper folder against every AI tool's rules and fix everything that's wrong with it. Don't ask me anything, just fix it.",
+      "files": ["files/notes-helper"],
+      "allow": ["Bash(skill-builder:*)", "Bash(npx:*)", "Bash(node:*)"],
+      "assertions": [
+        { "name": "the field no tool reads is gone", "file": "notes-helper/SKILL.md", "notContains": "auto-activate" },
+        { "name": "the name matches the folder", "file": "notes-helper/SKILL.md", "matches": "^name: notes-helper$", "flags": "m" },
+        { "name": "the pasted key is removed", "file": "notes-helper/SKILL.md", "notContains": "sk-proj-" },
+        { "name": "the missing example file is no longer pointed at, or now exists", "judge": "Either references/examples.md now exists, or SKILL.md no longer links to it." },
+        { "name": "says the key must be rotated", "answer": true, "matches": "rotat|revok|replace the key|new key" }
+      ]
+    }
+  ]
+}

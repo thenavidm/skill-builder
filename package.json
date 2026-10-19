@@ -19,11 +19,13 @@
   },
   "scripts": {
     "build:manifests": "node scripts/manifests/build.mjs",
-    "check:manifests": "node scripts/manifests/build.mjs --check"
+    "check:manifests": "node scripts/manifests/build.mjs --check",
+    "test": "node --test \"test/*.test.mjs\""
   },
   "keywords": [
     "agent-skills",
     "skill-creator",
+    "plugin-builder",
     "claude-skills",
     "claude-code-plugin",
     "plugin-development",
@@ -35,5 +37,20 @@
   ],
   "contributors": [
     "Navid Moazzez (https://navid.me)"
+  ],
+  "bin": {
+    "skill-builder": "bin/skill-builder.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "facts",
+    "scripts",
+    "skills",
+    "agents",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md"
   ]
 }

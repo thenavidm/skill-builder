@@ -4,6 +4,10 @@ Newest first.
 
 ## Unreleased
 
+- **The engine works.** Nine commands, each tested on real AI tools: `check` (every tool's rules, secrets included, each backed by a dated source), `tokens` (what your skills cost on every message, against each tool's budget), `trigger` (does the right skill fire, in Claude Code, Codex and Antigravity), `package` (one source into every tool's manifest, and Codex's "only when asked" file), `repo` (a new plugin repository that passes every tool's validator), `eval` and `bench` (with and without the skill, graded, with a review page), `install` (each tool's own validator, then the plugin loaded and run), `overlap` (proof nothing was copied), and `release` with `changelog`.
+- **Plugins, not only skills.** Three more skills in the specification: `/skill plugin` for a whole plugin, `/skill repo` for the repository around it, `/skill release` for an update that reaches every user. 23 skills in all.
+- **A FAQ that answers what goes wrong,** with what we measured: why skills stop triggering, how many fit, fields that silently do nothing, running only when asked, every tool, and safety and cost.
+
 ### Added
 
 - `skill-learn`: a correction or lesson applied to every skill it touches, sorted by how sure it is, rule-or-memory asked for each, a diff per file for your yes, versions bumped, and the affected evals run again.
