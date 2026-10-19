@@ -1,6 +1,6 @@
 ---
 name: skill-package
-description: Builds every AI tool's plugin manifest from one product.json and checks none has drifted. Use after changing skills, or when a tool shows an old version.
+description: Rebuilds every AI tool's plugin manifest (plugin.json and the rest) from one product.json and checks none has drifted. Use after adding or changing skills. Not for building a plugin (skill-plugin).
 ---
 
 # Package for every tool

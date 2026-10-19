@@ -7,8 +7,10 @@
  *   skill-builder check <skill-or-plugin> [--json]   every tool's rules, with the fact behind each
  *   skill-builder tokens <skill-or-plugin> [--json]  what each skill costs on every message and when it runs
  *   skill-builder trigger <skill-or-plugin> --set prompts.json [--tools claude,codex,antigravity]
- *                 [--runs 3] [--concurrency 3] [--timeout 120] [--split] [--dry] [--json]
- *                 each prompt in each real tool: did the right skill fire, and what fired instead
+ *                 [--runs 3] [--concurrency 3] [--timeout 120] [--split] [--fit-list] [--dry] [--json]
+ *                 each prompt in each real tool: did the right skill fire, and what fired instead.
+ *                 --fit-list gives every skill's description room in Claude Code's list for these
+ *                 runs, as on a computer with fewer skills installed
  *   skill-builder package [plugin] [--check]          product.json into every tool's manifest, plus each
  *                                                     "only when asked" skill's Codex file
  *   skill-builder package <skill> --skill-file [--out dir]   a .skill file to upload to claude.ai
@@ -47,7 +49,7 @@ import { basename } from "node:path";
 const [cmd, ...rest] = process.argv.slice(2);
 // Switches never take a value, so `--check` can't swallow the path after it, and a
 // flag with nothing after it counts as a switch: a check must never become a write.
-const SWITCHES = new Set(["json", "dry", "split", "keep", "check", "skill-file"]);
+const SWITCHES = new Set(["json", "dry", "split", "keep", "check", "skill-file", "fit-list"]);
 const flags = {};
 const args = [];
 for (let i = 0; i < rest.length; i++) {
@@ -122,8 +124,12 @@ switch (cmd) {
     if (flags.dry || !json) console.error(`${set.length} prompts x ${runs} runs x ${tools.length} tools (${tools.map((t) => TOOLS[t].label).join(", ")}) = ${total} runs, each a real request on your own account.`);
     if (flags.dry) break;
     let doneRuns = 0;
+    // Claude Code drops descriptions when its skill list overflows (fact skills.claude-code.listing-budget);
+    // --fit-list raises the list's budget for these runs only, through its documented setting
+    const extra = flags["fit-list"] ? { claude: ["--settings", JSON.stringify({ skillListingBudgetFraction: 0.1 })] } : {};
     const result = await trigger(path, set, {
       tools,
+      extra,
       runs,
       concurrency: num("concurrency", 3),
       timeoutS: num("timeout", 120),
@@ -143,7 +149,8 @@ switch (cmd) {
       const s = t.summary;
       console.log(`\n${t.label}${t.unverified ? " (unverified: how it shows a skill firing isn't confirmed)" : ""}`);
       console.log(`  should fire: ${s.shouldFire.passed} of ${s.shouldFire.of}   should not: ${s.shouldNot.passed} of ${s.shouldNot.of}   right on ${Math.round(s.accuracy * 100)}% of prompts`);
-      for (const p of t.prompts.filter((x) => !x.pass)) {
+      if (s.noResult.length) console.log(`  no result (every run errored or was blocked): ${s.noResult.length} prompts`);
+      for (const p of t.prompts.filter((x) => x.pass === false)) {
         const went = Object.entries({ ...p.ours, ...p.others }).map(([k, v]) => `${k} x${v}`).join(", ") || "nothing";
         console.log(`  missed  "${p.prompt.slice(0, 70)}${p.prompt.length > 70 ? "..." : ""}"  wanted ${p.expect ?? "none of these"}, got ${went} (${p.hits}/${p.runs - p.errors})`);
       }

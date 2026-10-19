@@ -19,7 +19,7 @@ A skill that only works in one tool, or only on the prompt you tried, is not fin
 
 Code does the validating, the counting and the statistics, so the same skill gets the same result every time. The model only judges what needs judgment, such as whether an output answered the task, and says when it did. Every format rule it uses names the tool's own documentation and the date it was checked.
 
-It has 23 skills and 8 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
+It has 24 skills and 8 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
 
 Built by [Navid Moazzez](https://navid.me).
 
@@ -89,7 +89,7 @@ Commands are written `/skill ...` here. In Claude Code and Codex the full name c
 | A repository published to a clear standard | `/skill publish` |
 | A release that reaches every user: version, notes, manifests | `/skill release` |
 
-All 23 skills are in [section 5](#5-skills), and all 8 agents in [section 6](#6-agents).
+All 24 skills are in [section 5](#5-skills), and all 8 agents in [section 6](#6-agents).
 
 ## Contents
 
@@ -99,7 +99,7 @@ All 23 skills are in [section 5](#5-skills), and all 8 agents in [section 6](#6-
 | 2 | [Install](#2-install) | Every AI tool, copy and paste |
 | 3 | [Set up](#3-set-up) | One interview, saved for every skill |
 | 4 | [How a skill is built](#4-how-a-skill-is-built) | Plan, write, check, test, measure, package |
-| 5 | [Skills](#5-skills) | All 23, grouped by job |
+| 5 | [Skills](#5-skills) | All 24, grouped by job |
 | 6 | [Agents](#6-agents) | All 8, and what each returns |
 | 7 | [Evidence](#7-evidence) | Every format rule and where it comes from |
 | 8 | [Your data](#8-your-data) | What is stored, and where |
@@ -215,7 +215,7 @@ Run `/skill setup` once in your project. It asks a short interview and writes th
 
 ## 5. Skills
 
-Skill Builder has 23 skills, each a folder in `skills/` with a `SKILL.md` your AI tool loads only when the job needs it. Every skill also works without agents, so results are the same in every AI tool. Skills marked **Release 1** ship first.
+Skill Builder has 24 skills, each a folder in `skills/` with a `SKILL.md` your AI tool loads only when the job needs it. Every skill also works without agents, so results are the same in every AI tool. Skills marked **Release 1** ship first.
 
 ### Start and plan
 
@@ -251,7 +251,8 @@ Skill Builder has 23 skills, each a folder in `skills/` with a `SKILL.md` your A
 
 | Skill | Command | What it does | Ships in |
 |---|---|---|---|
-| `skill-improve` | `/skill improve` | A rewrite from eval failures and your feedback, then the evals again | Release 1 |
+| `skill-improve` | `/skill improve` | A rewrite from eval failures and your feedback, proven on the failing case and everything that passed before | Release 1 |
+| `skill-tidy` | `/skill tidy` | A skill that works but grew long, repetitive or stale, tidied without changing what it does, proven by the same eval results with fewer tokens | Release 1 |
 | `skill-learn` | `/skill learn` | Corrections and lessons from this chat, a brief or a skill's recent runs, each applied to every skill it touches across your repos, sorted by how sure it is. It asks whether each is a rule for the skill or a principle for memory, shows a diff per file for your yes, bumps each skill's version, and runs the affected evals again so nothing regresses | Release 1 |
 | `skill-package` | `/skill package` | One `product.json` built into the manifests for Claude Code, Codex, Gemini CLI, Cursor and the `skills` CLI, and checked in CI | Release 1 |
 | `skill-repo` | `/skill repo` | A repository set up with every file a published plugin needs, its manifests built and checked, so it passes each tool's own validator from the first commit | Release 1 |

@@ -1,6 +1,6 @@
 ---
 name: skill
-description: Builds, tests and ships agent skills and plugins for Claude Code, Codex, Gemini CLI, Antigravity and Cursor. Use for anything about making or fixing skills or plugins.
+description: The entry point to Skill Builder, what it can do, which skill fits a request, setup and a health check. Use when unsure where to start with building or testing skills.
 ---
 
 # Skill Builder
@@ -25,7 +25,8 @@ It needs Node 22 or newer and installs nothing permanent. Where it's installed g
 | A whole plugin: several skills, agents, an entry skill | `skill-plugin` | `repo`, `check`, `trigger`, `install` |
 | A repository set up to publish a plugin | `skill-repo` | `repo new`, `package` |
 | To know why a skill doesn't fire, or fires on the wrong things | `skill-description` | `trigger` |
-| A skill fixed, or tidied without changing what it does | `skill-improve` | `check`, `eval` |
+| A skill fixed | `skill-improve` | `check`, `eval` |
+| A working skill tidied without changing what it does | `skill-tidy` | `check`, `tokens`, `eval` |
 | A correction applied everywhere it belongs | `skill-learn` | `eval` |
 | To beat a skill someone else made | `skill-compete` | `overlap`, `eval` |
 | To see whether a skill helps at all | `skill-eval` | `eval` |

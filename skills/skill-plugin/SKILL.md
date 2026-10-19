@@ -1,6 +1,6 @@
 ---
 name: skill-plugin
-description: Builds a whole plugin, its skills, agents and an entry skill, and proves each request reaches the right skill in every tool. Use for "build me a plugin for X".
+description: Builds a whole plugin, or bundles existing skills into one, with an entry skill, and proves each request reaches the right skill in every tool. Not for rebuilding manifests (skill-package).
 ---
 
 # Build a plugin

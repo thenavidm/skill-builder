@@ -1,6 +1,6 @@
 ---
 name: skill-compete
-description: Builds a better version of someone else's skill or plugin from scratch and proves it on the same tasks, with nothing copied. Use for "beat this skill".
+description: Builds a better version of someone else's skill or plugin from scratch and proves it on the same tasks, with nothing copied. Use for "beat this skill". Not for testing your own (skill-eval).
 ---
 
 # Beat a skill
