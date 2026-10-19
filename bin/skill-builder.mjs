@@ -49,7 +49,7 @@ import { basename } from "node:path";
 const [cmd, ...rest] = process.argv.slice(2);
 // Switches never take a value, so `--check` can't swallow the path after it, and a
 // flag with nothing after it counts as a switch: a check must never become a write.
-const SWITCHES = new Set(["json", "dry", "split", "keep", "check", "skill-file", "fit-list"]);
+const SWITCHES = new Set(["json", "dry", "split", "keep", "check", "skill-file", "fit-list", "help", "version"]);
 const flags = {};
 const args = [];
 for (let i = 0; i < rest.length; i++) {
@@ -72,6 +72,17 @@ function printFindings(result) {
     const source = f.fact ? ` [${f.fact}, checked ${facts().get(f.fact)?.sources?.[0]?.checked ?? "never"}]` : "";
     console.log(`  ${f.level.padEnd(7)} ${where}  ${f.message}${source}`);
   }
+}
+
+const USAGE = "usage: skill-builder <check|tokens|trigger|package|repo|eval|install|bench|overlap|changelog|release> <path> [options]";
+// A request for help never runs the command: `release --help` must not release.
+if (["help", "--help", "-h"].includes(cmd) || flags.help || rest.includes("-h")) {
+  console.log(USAGE);
+  process.exit(0);
+}
+if (["--version", "-v"].includes(cmd) || flags.version) {
+  console.log(JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version);
+  process.exit(0);
 }
 
 switch (cmd) {
@@ -382,6 +393,6 @@ switch (cmd) {
     break;
   }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval|install|bench|overlap|changelog|release> <path> [options]");
+    console.error(USAGE);
     process.exitCode = 2;
 }

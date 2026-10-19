@@ -4,6 +4,11 @@ Newest first.
 
 ## Unreleased
 
+## 0.1.1, 2026-10-19
+
+- **Install covers every tool, and updating too.** The README's install section adds ChatGPT and the Codex app, a terminal install of the engine from npm, Antigravity in the table of what each tool runs, and a table of how to update and remove Skill Builder in each tool.
+- **`--help` never runs a command.** `skill-builder release --help` used to start a release. Help and `--version` now print and stop, whatever command comes before them.
+
 ## 0.1.0, 2026-10-19
 
 - **The engine works.** Nine commands, each tested on real AI tools: `check` (every tool's rules, secrets included, each backed by a dated source), `tokens` (what your skills cost on every message, against each tool's budget), `trigger` (does the right skill fire, in Claude Code, Codex and Antigravity), `package` (one source into every tool's manifest, and Codex's "only when asked" file), `repo` (a new plugin repository that passes every tool's validator), `eval` and `bench` (with and without the skill, graded, with a review page), `install` (each tool's own validator, then the plugin loaded and run), `overlap` (proof nothing was copied), and `release` with `changelog`.
