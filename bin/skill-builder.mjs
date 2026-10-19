@@ -11,6 +11,9 @@
  *                 each prompt in each real tool: did the right skill fire, and what fired instead
  *   skill-builder package [plugin] [--check]          product.json into every tool's manifest, plus each
  *                                                     "only when asked" skill's Codex file
+ *   skill-builder repo new <dir> --profile p.json [--dry]   a new plugin repo with every house file,
+ *                                                     its manifests built, then checked
+ *   skill-builder repo publish --profile p.json       the GitHub steps, in order, for a yes on each
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
@@ -18,6 +21,8 @@ import { measure } from "../lib/tokens.mjs";
 import { TOOLS, installedTools } from "../lib/tools.mjs";
 import { loadSet, skillFolders, split, trigger } from "../lib/trigger.mjs";
 import { packagePlugin } from "../lib/package.mjs";
+import { publishSteps, scaffold } from "../lib/repo.mjs";
+import { readFileSync } from "node:fs";
 import { BuildError } from "../scripts/manifests/build.mjs";
 import { basename } from "node:path";
 
@@ -154,7 +159,42 @@ switch (cmd) {
     if (r.stale.length) process.exitCode = 1;
     break;
   }
+  case "repo": {
+    const [sub, dir] = args;
+    if (!flags.profile || !["new", "publish"].includes(sub)) {
+      console.error("usage: skill-builder repo new <dir> --profile profile.json [--dry] | repo publish --profile profile.json");
+      process.exitCode = 2;
+      break;
+    }
+    const input = JSON.parse(readFileSync(flags.profile, "utf8"));
+    if (sub === "publish") {
+      const steps = publishSteps(input);
+      if (json) console.log(JSON.stringify(steps, null, 2));
+      else steps.forEach((st, i) => console.log(`${i + 1}. ${st.what}\n   ${st.run}`));
+      break;
+    }
+    const r = scaffold(dir ?? ".", input, { dry: Boolean(flags.dry) });
+    let built = null;
+    let checked = null;
+    if (!flags.dry) {
+      built = await packagePlugin(r.root);
+      checked = check(r.root);
+    }
+    if (json) {
+      console.log(JSON.stringify({ ...r, manifests: built?.manifests.written ?? [], findings: checked?.findings ?? [] }, null, 2));
+      break;
+    }
+    for (const f of r.written) console.log(`${flags.dry ? "would write" : "wrote"} ${f}`);
+    for (const f of r.kept) console.log(`kept ${f} (it already exists)`);
+    if (built) for (const f of built.manifests.written) console.log(`built ${f}`);
+    if (checked) {
+      const errors = checked.findings.filter((f) => f.level === "error").length;
+      console.log(`\ncheck: ${errors} errors, ${checked.findings.length - errors} warnings and notes.`);
+      if (errors) process.exitCode = 1;
+    }
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger|package> <skill-or-plugin> [options]");
+    console.error("usage: skill-builder <check|tokens|trigger|package|repo> <skill-or-plugin> [options]");
     process.exitCode = 2;
 }
