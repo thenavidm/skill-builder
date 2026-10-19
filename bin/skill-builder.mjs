@@ -16,6 +16,8 @@
  *   skill-builder repo publish --profile p.json       the GitHub steps, in order, for a yes on each
  *   skill-builder eval <skill> [--tool claude] [--runs 3] [--grader claude] [--only <eval>] [--out dir]
  *                 the skill's evals with and without it, graded, with a review page
+ *   skill-builder install <plugin> [--tools ...]      each tool's own validator, then the plugin loaded
+ *                                                     for one run and its entry skill asked for
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
@@ -28,6 +30,7 @@ import { readFileSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { evaluate, loadEvals } from "../lib/eval.mjs";
 import { writeReview } from "../lib/review.mjs";
+import { installTest } from "../lib/install.mjs";
 import { BuildError } from "../scripts/manifests/build.mjs";
 import { basename } from "node:path";
 
@@ -247,7 +250,34 @@ switch (cmd) {
     console.log(`\nReview page: ${page}`);
     break;
   }
+  case "install": {
+    const installed = await installedTools();
+    const tools = flags.tools ? String(flags.tools).split(",") : installed;
+    const r = await installTest(args[0] ?? ".", { tools: tools.filter((t) => installed.includes(t)), live: !flags.dry });
+    if (json) {
+      console.log(JSON.stringify(r, null, 2));
+      break;
+    }
+    console.log(`${r.name}: entry skill ${r.entry}, ${r.skills.length} skills`);
+    let failed = false;
+    for (const t of Object.values(r.results)) {
+      const v = t.validate;
+      const vText = v.ok === null ? v.note : v.ok ? `its validator passes${v.warnings?.length ? ` (${v.warnings.length} warnings)` : ""}` : `its validator fails: ${v.problems.join("; ")}`;
+      const l = t.load;
+      const lText = !l ? "not loaded" : l.ran ? `loaded (${l.scope}) and ${r.entry} ran` : `loaded (${l.scope}) but ${r.entry} didn't run (${l.fired.length ? `got ${l.fired.join(", ")}` : l.status})`;
+      console.log(`  ${t.label.padEnd(12)} ${vText}; ${lText}`);
+      for (const w of v.warnings ?? []) {
+        // the root AGENTS.md and CLAUDE.md guide agents working on the repo; tools rightly don't load them as plugin content
+        const expected = /^(AGENTS|CLAUDE)\.md:/.test(w);
+        console.log(`               ${expected ? "expected" : "warning"}: ${w}${expected ? " (it's the guide for working on the repo, not part of the plugin)" : ""}`);
+      }
+      if (v.ok === false || (l && !l.ran)) failed = true;
+    }
+    for (const t of tools.filter((x) => !installed.includes(x))) console.log(`  ${TOOLS[t]?.label ?? t}: not installed here`);
+    if (failed) process.exitCode = 1;
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval> <skill-or-plugin> [options]");
+    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval|install> <skill-or-plugin> [options]");
     process.exitCode = 2;
 }
