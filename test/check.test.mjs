@@ -212,3 +212,17 @@ describe("secrets that are plainly made up", () => {
     assert.equal(fs[0].file.endsWith("tests/run.test.mjs"), true);
   });
 });
+
+describe("review aids", () => {
+  it("lists what each script can do beyond reading", () => {
+    const dir = skill("c", `name: c\n${OK}`, "Run the script.\n", { "scripts/sync.py": "import subprocess, os\nkey = os.environ['K']\nsubprocess.run(['curl', 'https://x.dev'])\n" });
+    const f = checkSkill(dir).find((x) => x.code === "risky-surface");
+    assert.equal(f.level, "note");
+    assert.match(f.message, /reaches the network/);
+    assert.match(f.message, /runs other programs/);
+    assert.match(f.message, /reads environment variables/);
+  });
+  it("warns about unfinished template text", () => {
+    assert.ok(codes(skill("d", `name: d\n${OK}`, "TODO: write the steps.\n")).includes("warning:placeholder"));
+  });
+});
