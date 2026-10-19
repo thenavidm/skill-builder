@@ -1,6 +1,6 @@
 ---
 name: skill-description
-description: Tests whether a skill's description fires on the right prompts and not on near misses, in each tool, and rewrites it until it does. Use when a skill won't fire or misfires.
+description: Checks that a skill's description fires on the right prompts and not on near misses, in each tool, and rewrites it until it does. Use when a skill won't fire or misfires.
 ---
 
 # Tune a description

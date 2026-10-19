@@ -5,7 +5,7 @@ description: Fixes a skill that gets something wrong, or tidies a bloated one, p
 
 # Improve a skill
 
-Two jobs, one standard: prove it. A plausible edit followed by "try it next time" is not a fix.
+Two jobs, one standard: prove it. An edit that only looks right, with the hope that it works next time, hasn't fixed anything.
 
 The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
 
