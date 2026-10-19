@@ -1,7 +1,6 @@
 {
   "name": "@thenavidm/skill-builder",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.1.0",
   "description": "Skill creator plugin and skills for Claude Code, Codex and AI agents. Plan, write, check, eval, benchmark, package, and publish agent skills and plugins for every AI tool.",
   "type": "module",
   "license": "MIT",
@@ -50,7 +49,9 @@
     "agents",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md",
-    "THIRD_PARTY_NOTICES.md"
-  ]
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
