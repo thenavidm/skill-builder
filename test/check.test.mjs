@@ -197,3 +197,18 @@ describe("secrets in what ships", () => {
     assert.ok(!codes(dir).some((c) => c.includes("secret")));
   });
 });
+
+describe("secrets that are plainly made up", () => {
+  it("are skipped, a key without a digit isn't taken for one, and a test file only warns", () => {
+    const real = "sk-" + "a1B2c3D4e5F6g7H8i9J0k1L2m3N4";
+    const dir = skill("b", `name: b\n${OK}`, "Go.\n", {
+      "scripts/net.mjs": "export const ROBOTS_TOKEN = 'remaster-robots-ua';\n",
+      "scripts/conf.sh": 'export HOOKLOOM_API_KEY="hl_test_0123456789abcd"\n',
+      "tests/run.test.mjs": `const k = "${real}";\n`,
+    });
+    const fs = checkSkill(dir).filter((f) => f.code === "secret");
+    assert.equal(fs.length, 1);
+    assert.equal(fs[0].level, "warning");
+    assert.equal(fs[0].file.endsWith("tests/run.test.mjs"), true);
+  });
+});

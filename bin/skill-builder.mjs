@@ -155,7 +155,13 @@ switch (cmd) {
     try {
       r = await packagePlugin(args[0] ?? ".", { check: Boolean(flags.check) });
     } catch (e) {
-      if (!(e instanceof BuildError)) throw e;
+      if (!(e instanceof BuildError) && e?.name !== "BuildError") throw e;
+      // a repository without product.json writes its manifests by hand, so they drift: say that, not "stale"
+      if (e.problems.some((p) => /product\.json: missing/.test(p))) {
+        console.error("This repository has no product.json, so each tool's manifest is written by hand and they drift apart. Add product.json (skill-builder repo new writes one) and every manifest is built from it.");
+        process.exitCode = 2;
+        break;
+      }
       for (const p of e.problems) console.error(p);
       process.exitCode = 1;
       break;
