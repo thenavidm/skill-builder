@@ -406,5 +406,32 @@
       }
     ],
     "notes": "So check reports it as a warning, not an error: the skill loads where tested, and quoting the value makes it safe in every YAML reader. 37 of 1,295 skills on the test Mac had it."
+  },
+  {
+    "id": "skills.claude-code.listing-budget",
+    "claim": "Claude Code fits the list of skill names and descriptions into a budget of 1% of the model's context window; when the list overflows it keeps every name but drops descriptions, starting with the skills invoked least.",
+    "value": {
+      "budgetShare": 0.01,
+      "settings": [
+        "skillListingBudgetFraction",
+        "SLASH_COMMAND_TOOL_CHAR_BUDGET",
+        "skillListingMaxDescChars",
+        "skillOverrides"
+      ]
+    },
+    "evidenceLevel": "official-confirmed",
+    "surfaces": [
+      "claude-code"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://code.claude.com/docs/en/skills",
+        "title": "Claude Code: skills, 'Skill descriptions are cut short'",
+        "published": null,
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "On the test Mac (Opus 5.5, a 1,000,000-token window, 260 skills installed), /context put the Skills row at 9.9k tokens, which matches a budget of 1% counted in tokens, and showed many skills as name-only. A skill without its description in the list can't be matched to a request, so a plugin's listing cost decides whether its skills still trigger."
   }
 ]
