@@ -7,7 +7,7 @@ description: Builds every AI tool's plugin manifest from one product.json and ch
 
 Each tool reads its own manifest file. Written by hand they drift: a new skill shows in one tool and not another, a version bumps in one place only. Built from `product.json` and `package.json`, one change reaches all of them.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ```bash
 npx -y @thenavidm/skill-builder@latest package <plugin>

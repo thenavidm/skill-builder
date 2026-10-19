@@ -7,7 +7,7 @@ description: Builds a whole plugin, its skills, agents and an entry skill, and p
 
 A plugin is several skills that have to work together: each must fire on its own requests and not steal its siblings', the whole set must fit in every tool's skill list, and it must install everywhere from one source.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. Plan
 

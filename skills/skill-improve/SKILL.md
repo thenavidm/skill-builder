@@ -7,7 +7,7 @@ description: Fixes a skill that gets something wrong, or tidies a bloated one, p
 
 Two jobs, one standard: prove it. An edit that only looks right, with the hope that it works next time, hasn't fixed anything.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## First, save the current version
 

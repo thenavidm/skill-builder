@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Every AI tool decides that someone's copy is out of date from the version number, so a release that keeps the old number reaches nobody. This moves the version, the notes and every manifest together, then takes each step that reaches a live system only after a yes.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. The notes
 

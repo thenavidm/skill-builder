@@ -11,6 +11,8 @@ Every installed skill's name and description sit in context on every message, wh
 npx -y @thenavidm/skill-builder@latest tokens <skill-or-plugin>
 ```
 
+(`skill-builder tokens <skill-or-plugin>` where it's installed globally.)
+
 ## Reading the result
 
 - **every message**: the skill's name and description. This is the cost that adds up across everything they have installed.

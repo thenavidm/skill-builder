@@ -7,7 +7,7 @@ description: Runs a skill's evals in every installed AI tool, side by side. Use 
 
 A skill written in one tool often half-works in another: a path one tool doesn't have, a feature it ignores, a description its list cuts. This runs the skill's own evals in each installed tool so "it works in Codex too" is a number.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 1. Run `check` first: anything it flags as one tool's feature will show up here as a gap.
 2. Say how many runs it takes (tasks x 2 x runs x tools), then:

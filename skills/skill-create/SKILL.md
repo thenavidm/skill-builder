@@ -7,7 +7,7 @@ description: Builds a new skill that does a task the user's way, from a goal, th
 
 Build a skill that does a person's task their way, prove it works on their real inputs in the AI tools they use, then install it. The value is the judgment you capture: anything the model already does well on its own doesn't need a skill.
 
-Every step below names its gate. Don't move on until the gate holds. The engine runs as `npx -y @thenavidm/skill-builder@latest <command>` (in the Skill Builder repository itself, `node bin/skill-builder.mjs <command>`).
+Every step below names its gate. Don't move on until the gate holds. The engine runs as `npx -y @thenavidm/skill-builder@latest <command>`, or `skill-builder <command>` where it's installed globally.
 
 ## Keep the job recoverable
 

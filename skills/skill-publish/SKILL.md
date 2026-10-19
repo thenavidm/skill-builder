@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 What people see first decides whether they install it: the description, the topics, the README's first screen. A public repository is indexed the moment it goes public, so it goes up private, gets checked, then opens.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. Ready?
 

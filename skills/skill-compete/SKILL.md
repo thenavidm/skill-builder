@@ -7,7 +7,7 @@ description: Builds a better version of someone else's skill or plugin from scra
 
 Read theirs, build ours from scratch, measure both the same way. Better means better on the same tasks with the numbers to show it, not longer.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. Get it and read its licence
 

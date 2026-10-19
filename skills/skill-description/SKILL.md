@@ -7,7 +7,7 @@ description: Checks that a skill's description fires on the right prompts and no
 
 A skill fires when the model, reading its name and description among all the others, decides it fits. This finds out what really happens in each tool, then improves the description without fitting it to the prompts you looked at.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. The prompts
 

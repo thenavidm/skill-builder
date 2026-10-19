@@ -11,7 +11,7 @@ Run the check, then explain what it found in plain words and fix what they want 
 npx -y @thenavidm/skill-builder@latest check <skill-folder-or-plugin>
 ```
 
-(In the Skill Builder repository itself: `node bin/skill-builder.mjs check <path>`.)
+(Where `skill-builder` is installed globally, `skill-builder check <path>` is the same.)
 
 Every finding names the fact it rests on and when that fact was last checked against the tool's own documentation or a real test.
 

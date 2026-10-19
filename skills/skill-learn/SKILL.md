@@ -7,7 +7,7 @@ description: Applies a correction to every skill it touches, with a diff to appr
 
 A correction given once should reach every skill it applies to, and stay proven. This finds those skills, changes each with the person's yes, and runs their tests again so the lesson doesn't break something else.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. State the lesson
 

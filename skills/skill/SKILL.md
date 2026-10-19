@@ -15,7 +15,7 @@ Counting, checking and testing are done in code, so the same skill gets the same
 npx -y @thenavidm/skill-builder@latest <command>
 ```
 
-It needs Node 22 or newer and installs nothing permanent. Inside the Skill Builder repository itself, `node bin/skill-builder.mjs <command>` is the same engine. Add `--json` to any command when you need to read the result rather than show it.
+It needs Node 22 or newer and installs nothing permanent. Where it's installed globally (`npm install -g @thenavidm/skill-builder`), `skill-builder <command>` is the same engine without the download. Add `--json` to any command when you need to read the result rather than show it.
 
 ## What to use
 

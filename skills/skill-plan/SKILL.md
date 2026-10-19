@@ -7,7 +7,7 @@ description: Plans a skill or plugin before building, deciding which jobs need a
 
 The most expensive mistake is building the wrong set of skills. This decides what to build and why, from the job and from what already exists.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. The jobs
 

@@ -7,7 +7,7 @@ description: Runs a skill's tasks with and without it in a real AI tool, grades 
 
 Run the same tasks with the skill and without it, grade each run, and show the difference. A skill that doesn't beat the plain model on its own tasks is weight in every conversation.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. The tasks
 

@@ -7,7 +7,7 @@ description: Sets up a plugin repository with its README as the spec, licence, c
 
 A plugin repository that passes every tool's validator from the first commit saves a week of small failures later.
 
-The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builder repository, `node bin/skill-builder.mjs`.
+The engine runs as `npx -y @thenavidm/skill-builder@latest`. Where `skill-builder` is installed (`npm install -g @thenavidm/skill-builder`), run `skill-builder` instead: it's the same engine, without the download.
 
 ## 1. The profile
 
