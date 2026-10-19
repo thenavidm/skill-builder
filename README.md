@@ -1,5 +1,10 @@
 # Skill Builder: Skill Creator Plugin and Skills for Claude Code, Codex and AI Agents
 
+[![CI](https://github.com/thenavidm/skill-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/thenavidm/skill-builder/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@thenavidm/skill-builder?color=0B81F7&label=npm)](https://www.npmjs.com/package/@thenavidm/skill-builder)
+[![Tests](https://img.shields.io/badge/tests-73%20passing-brightgreen)](test)
+[![Skills](https://img.shields.io/badge/skills-18-0B81F7)](#5-skills)
+[![Tested in](https://img.shields.io/badge/tested%20in-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Antigravity-6A5ACD)](#7-evidence)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 [![YouTube](https://img.shields.io/badge/YouTube-@thenavidm-red?logo=youtube&logoColor=white)](https://youtube.com/@thenavidm?sub_confirmation=1)
 [![X](https://img.shields.io/badge/X-@thenavidm-black?logo=x)](https://x.com/thenavidm)
@@ -7,33 +12,35 @@
 
 Skill creator plugin and skills for Claude Code, Codex and AI agents. Plan, write, check, eval, benchmark, package, and publish agent skills and plugins for every AI tool.
 
-Skill Builder helps your AI tool build agent skills and plugins that work, everywhere.
+**[What is it](#what-is-skill-builder) · [See it](#see-it) · [Why](#why-skill-builder) · [Install](#install) · [How the skills fit](#how-the-skills-fit) · [All skills](#5-skills) · [FAQ](#11-faq-)**
 
-You say "build me a skill that writes our release notes", or "make a plugin like these three repos, but better". It does the work.
+```bash
+npx skills add thenavidm/skill-builder
+```
 
-It plans the skills and agents first. It writes each one to the Agent Skills standard and checks it in code.
+Built by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=referral&utm_campaign=skill-builder&utm_content=readme).
 
-Then it proves it. It runs the same tasks with and without the skill, and tests whether the skill fires on the right prompts, in the AI tools you use.
+## What is Skill Builder?
 
-Last, it packages one source into every tool's plugin and publishes the repository.
+Skill Builder is a skill creator plugin for Claude Code, Codex and other AI agents. It builds agent skills and whole plugins, and proves they work in every AI tool before it calls them done.
 
-It also works from what you already did. Say "turn what we just did into a skill", and it builds one from this chat, a screen recording or a brief.
+You say "build me a skill that writes our release notes" or "make a plugin like these three repos, but better", and it does the work. It plans the skills and agents first, writes each one to the Agent Skills standard, checks it in code, tests it with and without the skill on the same prompts, and measures it in Claude Code, Codex and Antigravity. Then it packages one source into every tool's plugin and publishes the repository.
 
-Correct it once, and the correction reaches every skill it touches. The evals run again to prove nothing broke.
+It also works from what you already did. Say "turn what we just did into a skill" and it builds one from this chat, a screen recording or a brief. Correct it once, and the correction reaches every skill it touches, with the evals run again to prove nothing broke. Point it at someone else's skill, and it builds a better one from scratch and shows you the numbers, without copying a line.
 
-Point it at someone else's skill, and it builds a better one from scratch. It shows you the numbers, and proves it didn't copy a line.
+Code does the validating, the counting and the statistics, so the same skill gets the same result every time. The model only judges what needs judgment, such as whether an output answered the task, and says when it did.
 
-A skill that only works in one tool, or only on the prompt you tried, isn't finished. Skill Builder measures both before it calls a skill done.
+Ask your AI tool in plain words:
 
-Code does the checking, the counting and the statistics, so the same skill gets the same result every time. The model judges only what needs judgment, and says when it did.
+- *"Build me a skill that writes our release notes from merged pull requests."*
+- *"Turn what we just did into a skill."*
+- *"Here's a skill someone else made. Build a better one and prove it."*
+- *"Why doesn't my skill fire when I ask for meeting notes?"*
+- *"Build me a plugin for our podcast: guest booking, show notes, clips."*
 
-Every format rule it uses names the tool's own documentation and the date it was checked.
+## See it
 
-It has 18 skills and 8 agents, with 6 more skills coming in the next release. It installs in Claude Code, Codex, Gemini CLI, Antigravity and Cursor, and its tests run today in Claude Code, Codex and Antigravity.
-
-Built by [Navid Moazzez](https://navid.me).
-
-Here it is on a real skill, on 19 October 2026: a small skill that sets a team's style for dates, two tasks, with and without the skill, in three tools.
+A small skill that sets a team's style for dates, tested on 19 October 2026 on two tasks, with and without the skill, in three tools:
 
 ```
 $ skill-builder bench house-dates --runs 1
@@ -42,6 +49,71 @@ Claude Code    100%      58%     +42
 Codex          100%      25%     +75
 Antigravity    100%      n/a     n/a
 Antigravity: 2 runs stopped on a permission headless mode can't ask for, and are left out.
+```
+
+Skill Builder's own 18 skills, routed on 29 real prompts the same day: every prompt reached the right skill in Antigravity, 90% in Claude Code (the rest went to other installed skill builders, none to the wrong one of ours) and 86% in Codex.
+
+## Why Skill Builder
+
+- **Proven in the tools you use, not on one prompt.** It runs your skill's prompts in Claude Code, Codex and Antigravity and tells you which ones fired it, and which other installed skill took a prompt instead ([trigger](#5-skills)).
+- **With and without, as a number.** The same tasks run with the skill and without it, several times each, and the difference is the result. An assertion that passes as often without the skill is named, because it proves nothing.
+- **Checked in code against every tool's rules.** Fields no tool reads (a misspelled `user-invokable` silently does nothing), names that don't match their folder, paths only one tool has, macOS-only commands, keys pasted into a skill. Every rule names its source and the date it was checked.
+- **It knows what your skills cost.** Every installed description sits in context on every message, and tools drop descriptions when the list overflows. It measures each skill's share before your skills go quiet.
+- **Whole plugins, not only skills.** The skills, the agents, the entry skill that routes between them, the repository, every tool's manifest from one source, and releases that reach every user.
+- **It learns.** Correct it once and the correction reaches every skill it applies to, with their tests run again.
+- **Nothing copied.** When it builds a better version of someone else's skill, it proves no run of eight words came across.
+- **Your AI tool, your model.** The same skills install in Claude Code, Codex, Gemini CLI, Antigravity and Cursor. No agent is pinned to a model.
+
+## Compared to writing skills by hand, a skill-writing prompt, and Claude on its own
+
+| | By hand | A skill-writing prompt | Claude on its own | **Skill Builder** |
+|---|---|---|---|---|
+| **Checked against each tool's rules** | When you read the docs | No | No | **In code, every rule sourced and dated** |
+| **Fires on the right prompts** | You find out later | You find out later | You find out later | **Measured in each tool, before install** |
+| **Helps, as a number** | No | No | No | **With and without, on the same tasks** |
+| **Works in every tool** | When you test each one | No | No | **Tested in Claude Code, Codex and Antigravity** |
+| **Cost on every message** | Unknown | Unknown | Unknown | **Measured against each tool's budget** |
+| **A whole plugin and its repo** | By hand | No | Partly | **Planned, built, packaged and released** |
+
+## Who it's for
+
+- **Anyone who repeats a task with AI.** Turn the way you do it into a skill that does it your way every time.
+- **Plugin makers.** Build, test, package and release a plugin for every AI tool from one source.
+- **Teams.** Skills checked and measured before they reach everyone's tools, and corrections that reach every skill.
+- **Anyone with too many skills installed.** Find out which ones cost the most and why some stopped firing.
+
+## Install
+
+In Claude Code:
+
+```
+/plugin marketplace add thenavidm/skill-builder
+/plugin install skill-builder@skill-builder
+```
+
+In Codex: `codex plugin marketplace add thenavidm/skill-builder`, then `codex plugin add skill-builder@skill-builder`. Any other AI tool: `npx skills add thenavidm/skill-builder`.
+
+Then ask: _"make me a skill that writes our release notes"_. Every other AI tool is in [section 2](#2-install).
+
+## How the skills fit
+
+```
+                              skill  (the entry point: setup, health check, routing)
+                                │
+         ┌──────────────────────┼──────────────────────┐
+         ▼                      ▼                      ▼
+   skill-plan             skill-create           skill-plugin, skill-repo
+   (what to build)        (one skill)            (a whole plugin and its repo)
+         │                      │                      │
+         └──────────────────────┼──────────────────────┘
+                                ▼
+     prove it   skill-check · skill-tokens · skill-description · skill-eval · skill-bench
+                                │
+                                ▼
+     keep it    skill-improve · skill-tidy · skill-learn · skill-compete · skill-facts
+                                │
+                                ▼
+     ship it    skill-package · skill-release · skill-publish
 ```
 
 ## How you use it
@@ -369,6 +441,14 @@ Run `/skill doctor` first. It checks Node, the scripts and which AI tools it can
 | A manifest is stale | It was edited by hand. Edit `product.json` and run `/skill package` |
 | The skills do not appear | Restart your AI tool after installing, and check that auto-update did not leave an old version |
 
+## Limitations
+
+- **Gemini CLI** refuses free personal Google accounts (October 2026), so its tests need a paid or API-key account. Antigravity, Google's replacement, is tested.
+- **Cursor** installs the plugin, but its CLI isn't part of the automated tests yet.
+- **Windows** runs every check; running prompts in each tool is tested on macOS so far.
+- **A crowded skill list.** With hundreds of skills installed, Claude Code and Codex list most of them by name only. Skill Builder measures it, but can't change the tool's budget for you.
+- **Six skills are next**, not shipped: agents, from-docs, review, library, convert and update.
+
 ## 11. FAQ ❓
 
 <details>
@@ -497,19 +577,30 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 Run into a problem or have a question? [Open an issue](https://github.com/thenavidm/skill-builder/issues) and I will help.
 
-## About the author
+## Built by
 
-Navid Moazzez is a leading AI business strategist, and the host of the AI Creator Summit, watched by 100,000+ creators. He helps creators and founders master AI and build their own AI Operating System (AI OS) to automate their business and life. He creates useful free tools, MCP servers and CLIs that creators and founders can use in their own workflows.
+<table>
+<tr>
+<td width="150" align="center" valign="top"><h3><a href="https://navid.me"><img src="https://cdn.navid.me/navid-moazzez.jpg" width="120" height="120" alt="Navid Moazzez"></a></h3></td>
+<td valign="top">
 
-**Links**
+### Navid Moazzez
 
-- Personal website: [navid.me](https://navid.me)
-- Link in bio: [navid.bio](https://navid.bio)
-- Navid Media: [navid.media](https://navid.media)
-- YouTube: [@thenavidm](https://youtube.com/@thenavidm?sub_confirmation=1) and [@thenavidai](https://youtube.com/@thenavidai?sub_confirmation=1)
-- X: [@thenavidm](https://x.com/thenavidm)
-- Instagram: [@thenavidm](https://instagram.com/thenavidm)
-- LinkedIn: [thenavidm](https://linkedin.com/in/thenavidm)
+Navid Moazzez is a leading AI business strategist, and the host of the AI Creator Summit, watched by 100,000+ creators. He helps creators and founders master AI and build their own AI Operating System (AI OS) to automate their business and life. He creates useful free tools, MCP servers and CLIs for their own workflows.
+
+<a href="https://navid.me"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-navid-me-dark.svg"><img src="https://cdn.navid.me/repos/about-navid-me-light.svg" alt="navid.me" height="30"></picture></a>
+<a href="https://navid.bio"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-navid-bio-dark.svg"><img src="https://cdn.navid.me/repos/about-navid-bio-light.svg" alt="navid.bio" height="30"></picture></a>
+<a href="https://navid.media"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-navid-media-dark.svg"><img src="https://cdn.navid.me/repos/about-navid-media-light.svg" alt="Navid Media" height="30"></picture></a>
+<a href="https://youtube.com/@thenavidm?sub_confirmation=1"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-youtube-dark.svg"><img src="https://cdn.navid.me/repos/about-youtube-light.svg" alt="YouTube" height="30"></picture></a>
+<a href="https://youtube.com/@thenavidai?sub_confirmation=1"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-youtube-ai-dark.svg"><img src="https://cdn.navid.me/repos/about-youtube-ai-light.svg" alt="AI channel" height="30"></picture></a>
+<a href="https://x.com/thenavidm"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-x-dark.svg"><img src="https://cdn.navid.me/repos/about-x-light.svg" alt="X" height="30"></picture></a>
+<a href="https://instagram.com/thenavidm"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-instagram-dark.svg"><img src="https://cdn.navid.me/repos/about-instagram-light.svg" alt="Instagram" height="30"></picture></a>
+<a href="https://linkedin.com/in/thenavidm"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-linkedin-dark.svg"><img src="https://cdn.navid.me/repos/about-linkedin-light.svg" alt="LinkedIn" height="30"></picture></a>
+<a href="https://github.com/thenavidm"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.navid.me/repos/about-github-dark.svg"><img src="https://cdn.navid.me/repos/about-github-light.svg" alt="More repos" height="30"></picture></a>
+
+</td>
+</tr>
+</table>
 
 ## License
 
