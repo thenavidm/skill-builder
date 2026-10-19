@@ -43,7 +43,7 @@ describe("a new plugin repository", () => {
     const readme = readFileSync(join(dir, "README.md"), "utf8");
     assert.ok(readme.startsWith(`# Release Kit\n\n${P.description}`), "the README's first line is the description");
     assert.match(readFileSync(join(dir, "LICENSE"), "utf8"), /Copyright \(c\) \d{4} Test Author/);
-    assert.ok(!/—/.test(readme), "no em dashes");
+    assert.ok(!/\u2014/.test(readme), "no em dashes");
   });
   it("never overwrites a file that is already there", () => {
     const dir = join(root, "existing");
