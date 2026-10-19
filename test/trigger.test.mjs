@@ -82,3 +82,13 @@ describe("scoring", () => {
     assert.deepEqual(s.otherSkills, { "web-search": 1 });
   });
 });
+
+describe("starting a tool on Windows", () => {
+  it("reads the script an npm .cmd wrapper runs, so no shell is needed", async () => {
+    const { cmdTarget, resolveCommand } = await import("../lib/tools.mjs");
+    const wrapper = '@ECHO off\r\nGOTO start\r\n:find_dp0\r\nSET dp0=%~dp0\r\nEXIT /b\r\n:start\r\nSETLOCAL\r\nCALL :find_dp0\r\n"%_prog%"  "%dp0%\\node_modules\\@openai\\codex\\bin\\codex.js" %*\r\n';
+    assert.equal(cmdTarget(wrapper, "C:\\npm"), join("C:\\npm", "node_modules", "@openai", "codex", "bin", "codex.js"));
+    assert.equal(cmdTarget("@echo off\r\necho nothing\r\n", "C:\\npm"), null);
+    assert.deepEqual(resolveCommand("codex", "darwin"), ["codex", []]);
+  });
+});
