@@ -14,7 +14,7 @@ The README is the specification for the first release. The repo is the whole pro
 ## Layout
 
 ```
-skills/<skill-job>/SKILL.md   one folder per skill, Agent Skills fields only
+skills/<skill-job>/SKILL.md   one folder per skill: Agent Skills fields, plus fields one tool reads and the others skip
 agents/<skill-role>.md        flat files, no pinned model
 facts/                        sourced, dated claims, and the unsourced advice the tests keep out
 product.json                  the one source for every AI tool's manifest; never edit a generated one

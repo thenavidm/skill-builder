@@ -94,11 +94,17 @@ const RESERVED_MARKETPLACE_NAMES = new Set([
 // Cursor want lowercase with hyphens. Only this shape passes all of them.
 const PORTABLE_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-// The Agent Skills spec fields (https://agentskills.io/specification). Claude
-// Code reads more, but claude.ai uploads and the Skills API reject any other
-// key, and the other tools ignore them, so a skill that uses one would behave
-// differently from tool to tool.
+// The Agent Skills spec fields (https://agentskills.io/specification).
 const PORTABLE_SKILL_KEYS = new Set(["name", "description", "license", "compatibility", "metadata", "allowed-tools"]);
+
+// Fields one tool reads that the others load and skip (Claude Code and Cursor's
+// documentation, 2026-10-19; loading confirmed in Claude Code, Codex and the
+// Antigravity CLI: facts skills.claude-code.fields, skills.cursor.fields and
+// skills.extra-fields.tolerated). disable-model-invocation is the only way to
+// keep a skill that reaches a live system from starting on its own in Claude
+// Code and Cursor, so plugins may use these. claude.ai uploads and the Skills API
+// take the spec's fields only, so a .skill file for them leaves these out.
+const TOOL_SKILL_KEYS = new Set(["when_to_use", "argument-hint", "arguments", "disable-model-invocation", "user-invocable", "disallowed-tools", "paths", "model", "effort", "context", "agent", "background", "hooks", "shell"]);
 
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
 const HTTPS_URL = /^https:\/\/[^\s/$.?#][^\s]*$/;
@@ -369,8 +375,8 @@ function checkName(name, prefix, where, problems) {
 function checkSkill(skill, prefix, seen, problems) {
   const { data, dir, file } = skill;
   for (const key of Object.keys(data)) {
-    if (!PORTABLE_SKILL_KEYS.has(key)) {
-      problems.push(`${file}: frontmatter key "${key}" is not in the Agent Skills spec, so tools would treat this skill differently`);
+    if (!PORTABLE_SKILL_KEYS.has(key) && !TOOL_SKILL_KEYS.has(key)) {
+      problems.push(`${file}: frontmatter key "${key}" is not a field any AI tool reads, so it would do nothing`);
     }
   }
   if (checkName(dir, prefix, `${file} folder`, problems) && data.name !== dir) {
