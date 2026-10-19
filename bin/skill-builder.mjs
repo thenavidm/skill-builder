@@ -11,6 +11,7 @@
  *                 each prompt in each real tool: did the right skill fire, and what fired instead
  *   skill-builder package [plugin] [--check]          product.json into every tool's manifest, plus each
  *                                                     "only when asked" skill's Codex file
+ *   skill-builder package <skill> --skill-file [--out dir]   a .skill file to upload to claude.ai
  *   skill-builder repo new <dir> --profile p.json [--dry]   a new plugin repo with every house file,
  *                                                     its manifests built, then checked
  *   skill-builder repo publish --profile p.json       the GitHub steps, in order, for a yes on each
@@ -30,6 +31,7 @@ import { measure } from "../lib/tokens.mjs";
 import { TOOLS, installedTools } from "../lib/tools.mjs";
 import { loadSet, skillFolders, split, trigger } from "../lib/trigger.mjs";
 import { packagePlugin } from "../lib/package.mjs";
+import { skillFile } from "../lib/skillfile.mjs";
 import { publishSteps, scaffold } from "../lib/repo.mjs";
 import { readFileSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -45,7 +47,7 @@ import { basename } from "node:path";
 const [cmd, ...rest] = process.argv.slice(2);
 // Switches never take a value, so `--check` can't swallow the path after it, and a
 // flag with nothing after it counts as a switch: a check must never become a write.
-const SWITCHES = new Set(["json", "dry", "split", "keep", "check"]);
+const SWITCHES = new Set(["json", "dry", "split", "keep", "check", "skill-file"]);
 const flags = {};
 const args = [];
 for (let i = 0; i < rest.length; i++) {
@@ -151,6 +153,15 @@ switch (cmd) {
     break;
   }
   case "package": {
+    if (flags["skill-file"]) {
+      const r = skillFile(args[0] ?? ".", flags.out ?? ".");
+      if (json) console.log(JSON.stringify(r, null, 2));
+      else {
+        console.log(`wrote ${r.file} (${r.entries.length} files)`);
+        if (r.removed.length) console.log(`left out of its SKILL.md, because uploads take the Agent Skills fields only: ${r.removed.join(", ")}`);
+      }
+      break;
+    }
     let r;
     try {
       r = await packagePlugin(args[0] ?? ".", { check: Boolean(flags.check) });
