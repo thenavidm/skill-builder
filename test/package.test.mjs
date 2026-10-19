@@ -75,3 +75,29 @@ describe("the package command", () => {
     }
   });
 });
+
+describe("asking for help", () => {
+  it("prints the usage and runs nothing, even after a command that writes", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const { fileURLToPath } = await import("node:url");
+    const bin = fileURLToPath(new URL("../bin/skill-builder.mjs", import.meta.url));
+    const repo = join(root, "help-only");
+    mkdirSync(repo, { recursive: true });
+    const changelog = "# Changelog\n\n## Unreleased\n\n- Something.\n";
+    writeFileSync(join(repo, "CHANGELOG.md"), changelog);
+    writeFileSync(join(repo, "package.json"), JSON.stringify({ name: "x", version: "1.0.0" }));
+    for (const args of [["release", repo, "--help"], ["release", "--help", repo], ["release", repo, "-h"], ["--help"], ["help"]]) {
+      const r = spawnSync(process.execPath, [bin, ...args], { encoding: "utf8" });
+      assert.equal(r.status, 0, args.join(" "));
+      assert.match(r.stdout, /^usage: skill-builder/, args.join(" "));
+      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), changelog, args.join(" "));
+    }
+  });
+  it("prints the version", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const { fileURLToPath } = await import("node:url");
+    const bin = fileURLToPath(new URL("../bin/skill-builder.mjs", import.meta.url));
+    const own = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
+    assert.equal(spawnSync(process.execPath, [bin, "--version"], { encoding: "utf8" }).stdout.trim(), own);
+  });
+});

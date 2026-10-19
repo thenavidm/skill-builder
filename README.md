@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/thenavidm/skill-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/thenavidm/skill-builder/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@thenavidm/skill-builder?color=0B81F7&label=npm)](https://www.npmjs.com/package/@thenavidm/skill-builder)
-[![Tests](https://img.shields.io/badge/tests-73%20passing-brightgreen)](test)
+[![Tests](https://img.shields.io/badge/tests-75%20passing-brightgreen)](test)
 [![Skills](https://img.shields.io/badge/skills-18-0B81F7)](#5-skills)
 [![Tested in](https://img.shields.io/badge/tested%20in-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Antigravity-6A5ACD)](#7-evidence)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
@@ -93,7 +93,7 @@ In Claude Code:
 
 In Codex: `codex plugin marketplace add thenavidm/skill-builder`, then `codex plugin add skill-builder@skill-builder`. Any other AI tool: `npx skills add thenavidm/skill-builder`.
 
-Then ask: _"make me a skill that writes our release notes"_. Every other AI tool is in [section 2](#2-install).
+Then ask: _"make me a skill that writes our release notes"_. Every other AI tool, and how to update and remove it, is in [section 2](#2-install).
 
 ## How the skills fit
 
@@ -199,7 +199,7 @@ claude plugin marketplace add thenavidm/skill-builder
 claude plugin install skill-builder@skill-builder
 ```
 
-Or inside a session: `/plugin marketplace add thenavidm/skill-builder`, then `/plugin install skill-builder@skill-builder`. Turn on auto-update in `/plugin` so new releases reach you.
+Or inside a session: `/plugin marketplace add thenavidm/skill-builder`, then `/plugin install skill-builder@skill-builder`. Claude Code leaves auto-update off for marketplaces it doesn't run itself, so turn it on once in `/plugin` (**Marketplaces**, `skill-builder`, **Enable auto-update**). New releases then arrive in the background when Claude Code starts.
 
 **Codex**
 
@@ -242,15 +242,41 @@ npx skills add thenavidm/skill-builder
 
 The whole plugin runs in **Cowork**: the skills, the agents. In chat, on the web or in the desktop app's Chat tab, the skills run, but agents do not.
 
+**ChatGPT and the Codex app**
+
+Plugins install from the **Plugins** tab. To offer Skill Builder there, a workspace admin imports `thenavidm/skill-builder` as a GitHub marketplace for the team. On your own account, add it with the Codex commands above.
+
+**A terminal**
+
+```bash
+npm install -g @thenavidm/skill-builder
+skill-builder check path/to/your/skill
+```
+
+That is the engine on its own, for CI or scripts: `check`, `tokens`, `trigger`, `eval`, `bench`, `package`, `release` and the rest, with `skill-builder --help` for the list. You don't need it for the skills: they run it through `npx -y @thenavidm/skill-builder@latest`, so they always use the newest release.
+
 ### What each tool runs
 
-| | Claude Code | Codex | Gemini CLI | Cursor | skills CLI |
-|---|---|---|---|---|---|
-| Skills | yes | yes | yes | yes | yes |
-| Agents | yes | no: the skill does the agent's steps itself | yes (preview) | yes | no |
-
+| | Claude Code | Codex | Gemini CLI | Antigravity | Cursor | skills CLI |
+|---|---|---|---|---|---|---|
+| Skills | yes | yes | yes | yes | yes | yes |
+| Agents | yes | no: the skill does the agent's steps itself | yes (preview) | yes | yes | no |
 
 Where a tool has no agents, the skills run the same steps one after another in your main conversation and reach the same result. Only the time differs.
+
+### Updating and removing
+
+| Tool | Update | Remove |
+|---|---|---|
+| Claude Code | In the background, once auto-update is on. By hand: `claude plugin marketplace update skill-builder`, then `claude plugin update skill-builder@skill-builder` | `claude plugin uninstall skill-builder@skill-builder` |
+| Codex | `codex plugin marketplace upgrade` | `codex plugin remove skill-builder@skill-builder` |
+| Gemini CLI | Automatic when installed with `--auto-update`. By hand: `gemini extensions update skill-builder` | `gemini extensions uninstall skill-builder` |
+| Antigravity | Run `agy plugin install https://github.com/thenavidm/skill-builder` again | `agy plugin uninstall skill-builder` |
+| Cursor | Copy the newer release over `~/.cursor/plugins/local/skill-builder` | Delete that folder |
+| skills CLI | `npx skills update` | `npx skills remove` and pick the skills |
+| A terminal | `npm install -g @thenavidm/skill-builder@latest` | `npm uninstall -g @thenavidm/skill-builder` |
+
+Every release is listed in [CHANGELOG.md](CHANGELOG.md), and each one goes out to all of these at once: the marketplaces read this repository, and npm gets the same version.
 
 ## 3. Set up
 
