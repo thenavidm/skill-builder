@@ -9,22 +9,28 @@
  *   skill-builder trigger <skill-or-plugin> --set prompts.json [--tools claude,codex,antigravity]
  *                 [--runs 3] [--concurrency 3] [--timeout 120] [--split] [--dry] [--json]
  *                 each prompt in each real tool: did the right skill fire, and what fired instead
+ *   skill-builder package [plugin] [--check]          product.json into every tool's manifest, plus each
+ *                                                     "only when asked" skill's Codex file
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
 import { measure } from "../lib/tokens.mjs";
 import { TOOLS, installedTools } from "../lib/tools.mjs";
 import { loadSet, skillFolders, split, trigger } from "../lib/trigger.mjs";
+import { packagePlugin } from "../lib/package.mjs";
+import { BuildError } from "../scripts/manifests/build.mjs";
 import { basename } from "node:path";
 
 const [cmd, ...rest] = process.argv.slice(2);
-const SWITCHES = new Set(["json", "dry", "split", "keep"]);
+// Switches never take a value, so `--check` can't swallow the path after it, and a
+// flag with nothing after it counts as a switch: a check must never become a write.
+const SWITCHES = new Set(["json", "dry", "split", "keep", "check"]);
 const flags = {};
 const args = [];
 for (let i = 0; i < rest.length; i++) {
   const a = rest[i];
   if (!a.startsWith("--")) args.push(a);
-  else if (SWITCHES.has(a.slice(2))) flags[a.slice(2)] = true;
+  else if (SWITCHES.has(a.slice(2)) || rest[i + 1] === undefined || rest[i + 1].startsWith("--")) flags[a.slice(2)] = true;
   else flags[a.slice(2)] = rest[++i];
 }
 const json = Boolean(flags.json);
@@ -123,7 +129,32 @@ switch (cmd) {
     }
     break;
   }
+  case "package": {
+    let r;
+    try {
+      r = await packagePlugin(args[0] ?? ".", { check: Boolean(flags.check) });
+    } catch (e) {
+      if (!(e instanceof BuildError)) throw e;
+      for (const p of e.problems) console.error(p);
+      process.exitCode = 1;
+      break;
+    }
+    if (json) {
+      console.log(JSON.stringify(r, null, 2));
+    } else if (flags.check) {
+      for (const p of r.stale) console.error(`out of date: ${p}`);
+      if (r.stale.length) console.error("Run `skill-builder package` and commit the result.");
+      else console.log(`Every manifest and skill file matches product.json and the skills.`);
+    } else {
+      for (const p of [...r.manifests.written, ...r.sidecars.written]) console.log(`wrote ${p}`);
+      for (const p of r.sidecars.removed) console.log(`removed ${p} (the skill no longer waits to be asked)`);
+      for (const p of r.sidecars.kept) console.log(`left ${p} as it is: it was written by hand`);
+      console.log(`${r.manifests.written.length + r.sidecars.written.length} written, ${r.manifests.unchanged.length + r.sidecars.unchanged.length} unchanged.`);
+    }
+    if (r.stale.length) process.exitCode = 1;
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger> <skill-or-plugin> [options]");
+    console.error("usage: skill-builder <check|tokens|trigger|package> <skill-or-plugin> [options]");
     process.exitCode = 2;
 }
