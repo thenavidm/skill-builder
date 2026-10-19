@@ -4,6 +4,10 @@ Newest first.
 
 ## Unreleased
 
+## 1.0.0, 2026-10-19
+
+- **1.0.** The version now says what Skill Builder is: complete and in daily use. 18 skills, 8 agents, the engine on npm, and every tool's install and update path documented. It works the same as 0.1.1.
+
 ## 0.1.1, 2026-10-19
 
 - **Install covers every tool, and updating too.** The README's install section adds ChatGPT and the Codex app, a terminal install of the engine from npm, Antigravity in the table of what each tool runs, and a table of how to update and remove Skill Builder in each tool.
