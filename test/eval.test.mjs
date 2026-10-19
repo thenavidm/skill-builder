@@ -71,3 +71,13 @@ describe("eval files", () => {
     assert.throws(() => loadEvals(dir), (e) => /lowercase words/.test(e.message) && /no prompt/.test(e.message) && /code checks in their own/.test(e.message) && /say what it looks at/.test(e.message));
   });
 });
+
+describe("runs a permission stopped", () => {
+  it("are left out of the pass rate and counted as blocked", () => {
+    const g = (config, n, status, ok) => ({ eval: "e", config, n, status, seconds: 10, tokens: null, skillFired: config === "with", grades: [{ name: "a", passed: ok }] });
+    const r = aggregate([g("with", 1, "done", true), g("without", 1, "done", true), g("without", 2, "blocked", false)]);
+    assert.equal(r.configs.without.passRate.mean, 1);
+    assert.equal(r.configs.without.blocked, 1);
+    assert.equal(r.configs.without.runs, 1);
+  });
+});

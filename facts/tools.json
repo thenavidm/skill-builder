@@ -157,5 +157,28 @@
       }
     ],
     "notes": "The root AGENTS.md is the guide for agents working on the repository (Codex and others read it there), not a rule for the plugin's users, so it stays where it is and the strict warning is expected."
+  },
+  {
+    "id": "tools.headless.blocked",
+    "claim": "In headless mode a tool can't ask for a permission, so it refuses it; the Antigravity CLI 1.4.2 then stopped with no answer, printing that a tool needing the command permission was auto-denied.",
+    "value": {
+      "antigravity": "jetski: no output produced, a tool required the \"command\" permission that headless mode cannot prompt for, so it was auto-denied"
+    },
+    "evidenceLevel": "single-study",
+    "surfaces": [
+      "antigravity",
+      "claude-code",
+      "codex"
+    ],
+    "status": "current",
+    "sources": [
+      {
+        "url": "https://github.com/thenavidm/skill-builder/blob/main/facts",
+        "title": "Our test: the same eval without a skill, where the model reached for ls and find",
+        "published": "2026-10-19",
+        "checked": "2026-10-19"
+      }
+    ],
+    "notes": "eval and trigger mark such a run blocked and leave it out of the numbers: it measured the permission, not the skill. Skipping permission checks would hide it but gives a model in someone else's folder every tool, so the engine never does that."
   }
 ]

@@ -18,6 +18,8 @@
  *                 the skill's evals with and without it, graded, with a review page
  *   skill-builder install <plugin> [--tools ...]      each tool's own validator, then the plugin loaded
  *                                                     for one run and its entry skill asked for
+ *   skill-builder bench <skill> [--tools ...] [--runs 3]   the evals in every installed tool, side by side
+ *   skill-builder overlap <ours> <theirs> [--min 8]   runs of words shared with another skill
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
@@ -31,6 +33,8 @@ import { join, resolve } from "node:path";
 import { evaluate, loadEvals } from "../lib/eval.mjs";
 import { writeReview } from "../lib/review.mjs";
 import { installTest } from "../lib/install.mjs";
+import { bench } from "../lib/bench.mjs";
+import { overlap } from "../lib/overlap.mjs";
 import { BuildError } from "../scripts/manifests/build.mjs";
 import { basename } from "node:path";
 
@@ -240,7 +244,13 @@ switch (cmd) {
       break;
     }
     const b = result.benchmark;
-    const line = (c, label) => (b.configs[c] ? `  ${label.padEnd(16)} ${String(Math.round(b.configs[c].passRate.mean * 100)).padStart(3)}% of assertions passed (± ${Math.round(b.configs[c].passRate.sd * 100)}), ${Math.round(b.configs[c].seconds.mean)} s a run${b.configs[c].tokens ? `, ${Math.round(b.configs[c].tokens.mean)} tokens` : ""}` : "");
+    const line = (c, label) => {
+      const x = b.configs[c];
+      if (!x) return "";
+      const rate = x.passRate ? `${String(Math.round(x.passRate.mean * 100)).padStart(3)}% of assertions passed (± ${Math.round(x.passRate.sd * 100)})` : "no run finished";
+      const left = [x.blocked ? `${x.blocked} blocked by a permission headless mode can't ask for` : "", x.failed ? `${x.failed} failed or timed out` : ""].filter(Boolean).join(", ");
+      return `  ${label.padEnd(16)} ${rate}, ${Math.round(x.seconds.mean)} s a run${x.tokens ? `, ${Math.round(x.tokens.mean)} tokens` : ""}${left ? ` (left out: ${left})` : ""}`;
+    };
     console.log(`${b.skill} in ${TOOLS[tool].label}, ${runs} runs of each:`);
     console.log(line("with", "with the skill"));
     console.log(line("without", "without"));
@@ -277,7 +287,49 @@ switch (cmd) {
     if (failed) process.exitCode = 1;
     break;
   }
+  case "bench": {
+    const skillDir = resolve(args[0] ?? ".");
+    const installed = await installedTools();
+    const tools = flags.tools ? String(flags.tools).split(",").filter((t) => installed.includes(t)) : installed.filter((t) => !TOOLS[t].unverified);
+    const evals = loadEvals(skillDir);
+    const runs = num("runs", 3);
+    console.error(`${evals.length} evals x 2 x ${runs} runs in each of ${tools.map((t) => TOOLS[t].label).join(", ")} = ${evals.length * 2 * runs * tools.length} runs, each a real request on your own account.`);
+    if (flags.dry) break;
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    const out = resolve(flags.out ?? join(".agents", "skill", "bench", skillDir.split("/").pop(), stamp));
+    const r = await bench(skillDir, { tools, runs, out, timeoutS: num("timeout", 300) });
+    if (json) {
+      console.log(JSON.stringify({ out, disagree: r.disagree, tools: Object.fromEntries(Object.entries(r.perTool).map(([t, v]) => [t, { ...v.benchmark, review: v.review }])) }, null, 2));
+      break;
+    }
+    console.log(`${"tool".padEnd(12)} ${"with".padStart(6)} ${"without".padStart(8)} ${"change".padStart(7)}  time with  skill never ran`);
+    for (const [t, v] of Object.entries(r.perTool)) {
+      const b = v.benchmark;
+      const p = (c) => (b.configs[c]?.passRate ? `${Math.round(b.configs[c].passRate.mean * 100)}%` : "n/a");
+      console.log(`${TOOLS[t].label.padEnd(12)} ${p("with").padStart(6)} ${p("without").padStart(8)} ${(b.delta === null ? "n/a" : `${b.delta >= 0 ? "+" : ""}${Math.round(b.delta * 100)}`).padStart(7)}  ${String(Math.round(b.configs.with?.seconds.mean ?? 0)).padStart(6)} s  ${b.configs.with?.skillUnused ?? 0} of ${b.configs.with?.runs ?? 0}`);
+    }
+    for (const [t, v] of Object.entries(r.perTool)) {
+      const bl = (v.benchmark.configs.with?.blocked ?? 0) + (v.benchmark.configs.without?.blocked ?? 0);
+      if (bl) console.log(`${TOOLS[t].label}: ${bl} runs stopped on a permission headless mode can't ask for, and are left out.`);
+    }
+    if (r.disagree.length) console.log(`\nThe tools disagree on: ${r.disagree.join(", ")}`);
+    console.log(`\nReview pages: ${out}/<tool>/review.html`);
+    break;
+  }
+  case "overlap": {
+    if (args.length < 2) {
+      console.error("usage: skill-builder overlap <ours> <theirs> [--min 8]");
+      process.exitCode = 2;
+      break;
+    }
+    const runs = overlap(args[0], args[1], { min: num("min", 8) });
+    if (json) console.log(JSON.stringify(runs, null, 2));
+    else if (!runs.length) console.log(`No run of ${num("min", 8)} or more words is shared.`);
+    else for (const r of runs) console.log(`${r.words} words, ${r.file} and their ${r.theirs}: "${r.text}"`);
+    if (runs.length) process.exitCode = 1;
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval|install> <skill-or-plugin> [options]");
+    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval|install|bench|overlap> <path> [options]");
     process.exitCode = 2;
 }
