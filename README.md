@@ -374,7 +374,7 @@ Run `/skill doctor` first. It checks Node, the scripts and which AI tools it can
 <details>
 <summary><b>What is Skill Builder?</b></summary>
 
-A plugin that builds agent skills and whole plugins, and proves they work. It plans them, writes them to the Agent Skills standard, checks them in code against each AI tool's own rules, tests them with and without the skill, measures them in Claude Code, Codex, Gemini CLI, Antigravity and Cursor, then sets up, packages and releases the repository.
+Skill Builder is a plugin that builds agent skills and whole plugins, and proves they work. It plans them, writes them to the Agent Skills standard and checks them in code against each AI tool's own rules. It tests them with and without the skill in Claude Code, Codex and Antigravity. Then it sets up, packages and releases the repository. It installs in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
 
 </details>
 
@@ -388,7 +388,7 @@ A plugin is a bundle you install into your AI tool. A skill is a set of instruct
 <details>
 <summary><b>Why doesn't my skill trigger?</b></summary>
 
-Three causes, in the order we see them.
+There are three causes, in the order we see them.
 
 1. **The list of skills is full.** Claude Code fits every skill's name and description into 1% of the model's context window, and Codex into 2%. Past that, descriptions are dropped (in Claude Code, the least-used skills' first), and a skill without its description can't be matched to a request. On a 200,000-token model, one 27-skill plugin we measured needs 168% of Claude Code's budget on its own. `/skill tokens` shows what yours cost.
 2. **The name says nothing.** In our tests, clear names routed every prompt to the right skill in Claude Code, Codex and Antigravity, even with vague descriptions. With vague descriptions and names like `helper-one`, routing fell to 88%, 63% and 50%.
@@ -420,7 +420,7 @@ Each tool has its own switch: `disable-model-invocation: true` in SKILL.md for C
 <details>
 <summary><b>Will a skill I wrote for Claude Code work in Codex, Gemini CLI or Antigravity?</b></summary>
 
-Usually, as long as it avoids what only one tool has: `${CLAUDE_SKILL_DIR}`, `$ARGUMENTS`, commands that run before the skill loads, folders such as `~/.claude/`, and commands that exist on macOS only. `/skill check` finds each one and says what works everywhere. `/skill bench` then runs the skill's evals in every tool you have, so "it works in Codex too" is a number.
+Usually it does, as long as it avoids what only one tool has: `${CLAUDE_SKILL_DIR}`, `$ARGUMENTS`, commands that run before the skill loads, folders such as `~/.claude/`, and commands that exist on macOS only. `/skill check` finds each one and says what works everywhere. `/skill bench` then runs the skill's evals in every tool you have, so "it works in Codex too" is a number.
 
 </details>
 
@@ -450,7 +450,7 @@ Skill Builder is free and MIT licensed. The tests run in your own AI tool, on yo
 <details>
 <summary><b>Can it build a whole plugin and set up the repository?</b></summary>
 
-Yes. `/skill plugin` plans and writes the skills, the agents and the entry skill that routes to them. `/skill repo` writes everything a published plugin needs: the README as its specification, a licence, a changelog, how to report a bug and a vulnerability, CI, search topics, and one `product.json` that builds every tool's manifest. A repository it writes passes Claude Code's, Gemini CLI's and Antigravity's own validators from the first commit.
+Yes, it can do both. `/skill plugin` plans and writes the skills, the agents and the entry skill that routes to them. `/skill repo` writes everything a published plugin needs: the README as its specification, a licence, a changelog, how to report a bug and a vulnerability, CI, search topics, and one `product.json` that builds every tool's manifest. A repository it writes passes Claude Code's, Gemini CLI's and Antigravity's own validators from the first commit.
 
 </details>
 
@@ -464,7 +464,7 @@ Every tool decides that a copy is out of date from the version number, so a rele
 <details>
 <summary><b>Someone sent me a skill. Can I check it before I install it?</b></summary>
 
-Yes. `/skill check` reads it without running anything: fields that do nothing, files it points to that aren't there, commands for one system only, and secrets. Shared skill folders sometimes carry a `.env` file with live keys. Check fails that, and keys pasted into files, naming the file and the kind of key, never the key itself.
+Yes, you can. `/skill check` reads it without running anything: fields that do nothing, files it points to that aren't there, commands for one system only, and secrets. Shared skill folders sometimes carry a `.env` file with live keys. Check fails that, and keys pasted into files, naming the file and the kind of key, never the key itself.
 
 </details>
 
@@ -478,7 +478,7 @@ Its checks are plain Node and run wherever Node 22 does. Running prompts in each
 <details>
 <summary><b>Does it send my skills anywhere?</b></summary>
 
-No. Nothing is uploaded and there is no telemetry. Everything runs on your computer, in your own AI tool.
+No, it doesn't. Nothing is uploaded and there is no telemetry. Everything runs on your computer, in your own AI tool.
 
 </details>
 
