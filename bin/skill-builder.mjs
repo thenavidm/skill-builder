@@ -14,6 +14,8 @@
  *   skill-builder repo new <dir> --profile p.json [--dry]   a new plugin repo with every house file,
  *                                                     its manifests built, then checked
  *   skill-builder repo publish --profile p.json       the GitHub steps, in order, for a yes on each
+ *   skill-builder eval <skill> [--tool claude] [--runs 3] [--grader claude] [--only <eval>] [--out dir]
+ *                 the skill's evals with and without it, graded, with a review page
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
@@ -22,7 +24,10 @@ import { TOOLS, installedTools } from "../lib/tools.mjs";
 import { loadSet, skillFolders, split, trigger } from "../lib/trigger.mjs";
 import { packagePlugin } from "../lib/package.mjs";
 import { publishSteps, scaffold } from "../lib/repo.mjs";
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdirSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { evaluate, loadEvals } from "../lib/eval.mjs";
+import { writeReview } from "../lib/review.mjs";
 import { BuildError } from "../scripts/manifests/build.mjs";
 import { basename } from "node:path";
 
@@ -194,7 +199,55 @@ switch (cmd) {
     }
     break;
   }
+  case "eval": {
+    const skillDir = resolve(args[0] ?? ".");
+    const tool = flags.tool ?? (await installedTools()).find((t) => !TOOLS[t].unverified);
+    if (!tool) {
+      console.error("No AI tool to run the evals in: install Claude Code, Codex or Antigravity.");
+      process.exitCode = 2;
+      break;
+    }
+    const evals = loadEvals(skillDir).filter((e) => !flags.only || e.name === flags.only);
+    const runs = num("runs", 3);
+    const judged = evals.reduce((n, e) => n + e.assertions.filter((a) => a.judge).length, 0);
+    const total = evals.length * 2 * runs;
+    console.error(`${evals.length} evals x 2 (with and without the skill) x ${runs} runs in ${TOOLS[tool].label} = ${total} runs${judged ? `, plus ${judged * 2 * runs} grading calls` : ""}, each a real request on your own account.`);
+    if (flags.dry) break;
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    const out = resolve(flags.out ?? join(".agents", "skill", "runs", skillDir.split("/").pop(), stamp));
+    mkdirSync(out, { recursive: true });
+    let done = 0;
+    const result = await evaluate(skillDir, {
+      tool,
+      runs,
+      grader: flags.grader,
+      only: flags.only,
+      timeoutS: num("timeout", 300),
+      concurrency: num("concurrency", 2),
+      out,
+      onRun: () => {
+        done++;
+        if (process.stderr.isTTY) process.stderr.write(`\r${done}/${total} runs`);
+      },
+    });
+    if (process.stderr.isTTY) process.stderr.write("\n");
+    const page = writeReview(out, result);
+    if (json) {
+      console.log(JSON.stringify({ ...result.benchmark, out, review: page }, null, 2));
+      break;
+    }
+    const b = result.benchmark;
+    const line = (c, label) => (b.configs[c] ? `  ${label.padEnd(16)} ${String(Math.round(b.configs[c].passRate.mean * 100)).padStart(3)}% of assertions passed (± ${Math.round(b.configs[c].passRate.sd * 100)}), ${Math.round(b.configs[c].seconds.mean)} s a run${b.configs[c].tokens ? `, ${Math.round(b.configs[c].tokens.mean)} tokens` : ""}` : "");
+    console.log(`${b.skill} in ${TOOLS[tool].label}, ${runs} runs of each:`);
+    console.log(line("with", "with the skill"));
+    console.log(line("without", "without"));
+    if (b.delta !== null) console.log(`  difference: ${b.delta >= 0 ? "+" : ""}${Math.round(b.delta * 100)} points`);
+    if (b.configs.with?.skillUnused) console.log(`  In ${b.configs.with.skillUnused} runs with the skill, the skill never ran.`);
+    if (b.nonDiscriminating.length) console.log(`  Passed as often without the skill, so they prove nothing: ${b.nonDiscriminating.join("; ")}`);
+    console.log(`\nReview page: ${page}`);
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger|package|repo> <skill-or-plugin> [options]");
+    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval> <skill-or-plugin> [options]");
     process.exitCode = 2;
 }
