@@ -6,14 +6,29 @@
  *
  *   skill-builder check <skill-or-plugin> [--json]   every tool's rules, with the fact behind each
  *   skill-builder tokens <skill-or-plugin> [--json]  what each skill costs on every message and when it runs
+ *   skill-builder trigger <skill-or-plugin> --set prompts.json [--tools claude,codex,antigravity]
+ *                 [--runs 3] [--concurrency 3] [--timeout 120] [--split] [--dry] [--json]
+ *                 each prompt in each real tool: did the right skill fire, and what fired instead
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
 import { measure } from "../lib/tokens.mjs";
+import { TOOLS, installedTools } from "../lib/tools.mjs";
+import { loadSet, skillFolders, split, trigger } from "../lib/trigger.mjs";
+import { basename } from "node:path";
 
 const [cmd, ...rest] = process.argv.slice(2);
-const json = rest.includes("--json");
-const args = rest.filter((a) => !a.startsWith("--"));
+const SWITCHES = new Set(["json", "dry", "split", "keep"]);
+const flags = {};
+const args = [];
+for (let i = 0; i < rest.length; i++) {
+  const a = rest[i];
+  if (!a.startsWith("--")) args.push(a);
+  else if (SWITCHES.has(a.slice(2))) flags[a.slice(2)] = true;
+  else flags[a.slice(2)] = rest[++i];
+}
+const json = Boolean(flags.json);
+const num = (k, d) => (flags[k] === undefined ? d : Number(flags[k]));
 
 function printFindings(result) {
   const order = { error: 0, warning: 1, note: 2 };
@@ -56,7 +71,59 @@ switch (cmd) {
     console.log("  When the list overflows, descriptions are dropped and those skills stop triggering.");
     break;
   }
+  case "trigger": {
+    const path = args[0] ?? ".";
+    if (!flags.set) {
+      console.error("trigger needs --set <prompts.json>: a list of { prompt, expect } (expect: the skill that should fire, or null)");
+      process.exitCode = 2;
+      break;
+    }
+    const names = skillFolders(path).map((f) => basename(f));
+    const set = loadSet(flags.set, names);
+    const installed = await installedTools();
+    const tools = flags.tools ? String(flags.tools).split(",") : installed.filter((t) => !TOOLS[t].unverified);
+    const missing = tools.filter((t) => !installed.includes(t));
+    if (missing.length) {
+      console.error(`Not installed here: ${missing.join(", ")}.`);
+      process.exitCode = 2;
+      break;
+    }
+    const runs = num("runs", 3);
+    const total = tools.length * set.length * runs;
+    if (flags.dry || !json) console.error(`${set.length} prompts x ${runs} runs x ${tools.length} tools (${tools.map((t) => TOOLS[t].label).join(", ")}) = ${total} runs, each a real request on your own account.`);
+    if (flags.dry) break;
+    let doneRuns = 0;
+    const result = await trigger(path, set, {
+      tools,
+      runs,
+      concurrency: num("concurrency", 3),
+      timeoutS: num("timeout", 120),
+      keep: Boolean(flags.keep),
+      onRun: () => {
+        doneRuns++;
+        if (!json && process.stderr.isTTY) process.stderr.write(`\r${doneRuns}/${total} runs`);
+      },
+    });
+    if (!json && process.stderr.isTTY) process.stderr.write("\n");
+    const halves = flags.split ? split(set) : null;
+    if (json) {
+      console.log(JSON.stringify({ ...result, ...(halves ? { split: { train: halves.train.map((p) => p.prompt), test: halves.test.map((p) => p.prompt) } } : {}) }, null, 2));
+      break;
+    }
+    for (const t of Object.values(result.tools)) {
+      const s = t.summary;
+      console.log(`\n${t.label}${t.unverified ? " (unverified: how it shows a skill firing isn't confirmed)" : ""}`);
+      console.log(`  should fire: ${s.shouldFire.passed} of ${s.shouldFire.of}   should not: ${s.shouldNot.passed} of ${s.shouldNot.of}   right on ${Math.round(s.accuracy * 100)}% of prompts`);
+      for (const p of t.prompts.filter((x) => !x.pass)) {
+        const went = Object.entries({ ...p.ours, ...p.others }).map(([k, v]) => `${k} x${v}`).join(", ") || "nothing";
+        console.log(`  missed  "${p.prompt.slice(0, 70)}${p.prompt.length > 70 ? "..." : ""}"  wanted ${p.expect ?? "none of these"}, got ${went} (${p.hits}/${p.runs - p.errors})`);
+      }
+      const other = Object.entries(s.otherSkills);
+      if (other.length) console.log(`  other installed skills that took these prompts: ${other.map(([k, v]) => `${k} x${v}`).join(", ")}`);
+    }
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens> <skill-or-plugin> [--json]");
+    console.error("usage: skill-builder <check|tokens|trigger> <skill-or-plugin> [options]");
     process.exitCode = 2;
 }
