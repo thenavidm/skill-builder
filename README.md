@@ -19,7 +19,7 @@ A skill that only works in one tool, or only on the prompt you tried, is not fin
 
 Code does the validating, the counting and the statistics, so the same skill gets the same result every time. The model only judges what needs judgment, such as whether an output answered the task, and says when it did. Every format rule it uses names the tool's own documentation and the date it was checked.
 
-It has 23 skills and 7 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
+It has 23 skills and 8 agents, and works in Claude Code, Codex, Gemini CLI, Antigravity and Cursor.
 
 Built by [Navid Moazzez](https://navid.me).
 
@@ -89,7 +89,7 @@ Commands are written `/skill ...` here. In Claude Code and Codex the full name c
 | A repository published to a clear standard | `/skill publish` |
 | A release that reaches every user: version, notes, manifests | `/skill release` |
 
-All 23 skills are in [section 5](#5-skills), and all 7 agents in [section 6](#6-agents).
+All 23 skills are in [section 5](#5-skills), and all 8 agents in [section 6](#6-agents).
 
 ## Contents
 
@@ -100,7 +100,7 @@ All 23 skills are in [section 5](#5-skills), and all 7 agents in [section 6](#6-
 | 3 | [Set up](#3-set-up) | One interview, saved for every skill |
 | 4 | [How a skill is built](#4-how-a-skill-is-built) | Plan, write, check, test, measure, package |
 | 5 | [Skills](#5-skills) | All 23, grouped by job |
-| 6 | [Agents](#6-agents) | All 7, and what each returns |
+| 6 | [Agents](#6-agents) | All 8, and what each returns |
 | 7 | [Evidence](#7-evidence) | Every format rule and where it comes from |
 | 8 | [Your data](#8-your-data) | What is stored, and where |
 | 9 | [Notes and gotchas](#9-notes-and-gotchas) | What catches people out |
@@ -294,6 +294,7 @@ Codex has no agents in plugins, so there the skill does each agent's steps itsel
 | `skill-comparator` | `skill-eval`, `skill-improve`, `skill-compete` | Compares two versions' outputs without knowing which is which, and says which is better and why | `compare-<date>.json` |
 | `skill-analyzer` | `skill-eval`, `skill-bench` | Finds the patterns in the results: which prompts fail, which assertions never discriminate, where runs disagree | `benchmark-<date>.json` |
 | `skill-fact-checker` | `skill-create`, `skill-facts` | Lists every claim a skill makes and the source behind it, or "none" | `claims-<skill>-<date>.json` |
+| `skill-reviewer` | `skill-create`, `skill-improve` | Reads a drafted skill cold, the way a model will, against its confirmed plan, and sorts what it finds into blockers, fixes and later | `review-<round>.md` |
 
 ## 7. Evidence
 

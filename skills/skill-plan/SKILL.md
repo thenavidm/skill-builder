@@ -31,6 +31,8 @@ For each example repository or skill they point at: what it does, its strengths,
 
 Every skill that starts on its own costs context on every message, and similar skills steal each other's prompts. Count the planned skills' descriptions against the budget with `tokens` once drafted. Plan one entry skill that routes, keep the rest specific, and plan the routing test (`evals/triggers.json` with an `expect` for each prompt) before writing any skill.
 
+The `skill-architect` agent can do steps 1 to 4 in a fresh context and write the plan; in a tool without agents, do them yourself.
+
 ## 5. The plan
 
 Write `.agents/skill/plan-<date>.md`: the jobs, the comparison table, each planned skill with its name, one-line description and why it exists, the agents and scripts, what's deliberately left out, the routing prompts, and the order to build them (the entry skill and the most-used job first). Show it and get their yes before `skill-plugin` or `skill-create` builds anything.

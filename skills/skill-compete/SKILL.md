@@ -15,6 +15,8 @@ From GitHub, a skills directory, their disk, or pasted text. Read the licence be
 
 ## 2. Take it apart
 
+The `skill-architect` agent can do this teardown in a fresh context.
+
 - **What it does**, step by step.
 - **What it does well**: list every strength. Ours must match each one or beat it, or the comparison isn't honest.
 - **Where it stops**: tools it doesn't work in, steps it skips, claims it doesn't test.
@@ -39,7 +41,7 @@ npx -y @thenavidm/skill-builder@latest eval <ours> --runs 3
 npx -y @thenavidm/skill-builder@latest eval <theirs> --runs 3
 ```
 
-Add `trigger` on the same prompts if triggering matters, and `bench` if they use several tools. A blind comparison helps when assertions can't capture quality: give an independent agent the two outputs for each task, unlabelled, and ask which is better and why.
+Add `trigger` on the same prompts if triggering matters, and `bench` if they use several tools. Have the `skill-grader` agent grade every run. A blind comparison helps when assertions can't capture quality: give the `skill-comparator` agent the two outputs for each task, unlabelled. Where an AI tool can't run headless, the `skill-executor` agent runs each task in a fresh context instead.
 
 ## 5. Prove it's ours
 

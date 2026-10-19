@@ -33,7 +33,7 @@ Show the list and let them confirm which to change.
 
 ## 4. One change per skill, each approved
 
-For each, show the exact diff: where the rule goes and how it's worded for that skill. Change only what the rule needs. If a skill already has a rule that contradicts this one, ask which wins. Apply the ones they approve, and bump the skill's version in `metadata` (or the plugin's in `package.json` through `skill-release`).
+For each, have the `skill-writer` agent draft the change (or draft it yourself), then show the exact diff: where the rule goes and how it's worded for that skill. Change only what the rule needs. If a skill already has a rule that contradicts this one, ask which wins. Apply the ones they approve, and bump the skill's version in `metadata` (or the plugin's in `package.json` through `skill-release`).
 
 ## 5. Prove nothing broke
 

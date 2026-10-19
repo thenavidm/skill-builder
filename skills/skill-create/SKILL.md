@@ -74,7 +74,7 @@ Gate: every core promise has a task, and every task has at least one assertion t
 
 ## 6. Draft the skill
 
-Write it in the draft folder. Explain why each rule matters rather than shouting it: a model that knows the reason handles cases the rule didn't foresee. Write the finish line into the skill as the bar it checks its own work against. Keep `SKILL.md` under 500 lines and the instructions under about 5,000 tokens. For anything only one tool has, follow [working in every tool](references/portable.md).
+Start the `skill-writer` agent with the confirmed plan and the draft folder (in a tool without agents, write it yourself the same way). Explain why each rule matters rather than shouting it: a model that knows the reason handles cases the rule didn't foresee. Write the finish line into the skill as the bar it checks its own work against. Keep `SKILL.md` under 500 lines and the instructions under about 5,000 tokens. For anything only one tool has, follow [working in every tool](references/portable.md).
 
 Gate: every rule from the plan is in the files. Check the list item by item.
 
@@ -84,7 +84,7 @@ Gate: every rule from the plan is in the files. Check the list item by item.
 npx -y @thenavidm/skill-builder@latest check <draft-folder>
 ```
 
-Fix every error. For each warning, fix it or note in the log why it stays. For each `risky-surface` note, explain to them, without jargon, what the script can do (reach the network, delete, run programs, read keys) and get a yes for it in the same turn; if they say no, take it out.
+If the skill states numbers, limits or platform rules, start the `skill-fact-checker` agent on the draft and source or remove each claim. Fix every error. For each warning, fix it or note in the log why it stays. For each `risky-surface` note, explain to them, without jargon, what the script can do (reach the network, delete, run programs, read keys) and get a yes for it in the same turn; if they say no, take it out.
 
 Gate: no errors, every warning handled, every risky action approved.
 
@@ -108,7 +108,7 @@ Gate: every should-fire prompt fires in most runs in each tool, no near miss fir
 
 ## 9. Independent review
 
-Ask an independent reviewer (a fresh agent, if this tool runs agents; otherwise review it yourself and say so) to read the draft against the confirmed plan using [the review guide](references/review.md). Fix what blocks it. Allow two rounds: if it still fails after the second, narrow what the skill promises or stop, rather than looping.
+Start the `skill-reviewer` agent (in a tool without agents, review it yourself and say so) to read the draft against the confirmed plan using [the review guide](references/review.md). Fix what blocks it. Allow two rounds: if it still fails after the second, narrow what the skill promises or stop, rather than looping.
 
 Gate: no unresolved blocker.
 

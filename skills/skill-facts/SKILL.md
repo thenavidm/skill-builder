@@ -11,6 +11,8 @@ A skill that tells the model "posts with links get less reach" or "the limit is 
 
 Read the skill and its references. A claim is anything that could be checked and could change: a number, a limit, a format, a platform's behaviour, a "best practice". List each with where it sits.
 
+The `skill-fact-checker` agent can do steps 1 and 2 in a fresh context and write the list.
+
 ## 2. Source each one
 
 For each, find the best source and record how strong it is:

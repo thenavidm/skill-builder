@@ -27,4 +27,4 @@ npx -y @thenavidm/skill-builder@latest bench <skill> --runs 3
 | Runs were blocked | That tool asked for a permission headless mode can't give; the result says which runs |
 | Gemini CLI didn't run | It refuses free personal accounts (October 2026); it needs a paid or API-key account |
 
-Each tool has its own review page under the output folder. Fix in the skill, then run the bench again on the tool that fell behind.
+The `skill-analyzer` agent can read all the tools' results together and name the likely cause of each gap. Each tool has its own review page under the output folder. Fix in the skill, then run the bench again on the tool that fell behind.

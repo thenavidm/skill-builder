@@ -21,7 +21,7 @@ Say how many runs it will take (tasks x 2 x runs), then:
 npx -y @thenavidm/skill-builder@latest eval <skill> --tool <their main tool> --runs 3
 ```
 
-Each run gets its own throwaway folder and may write only there. Nothing switches permission checks off.
+Each run gets its own throwaway folder and may write only there. Nothing switches permission checks off. Where no AI tool can be run headless (in claude.ai, say), the `skill-executor` agent runs each task in a fresh context and the `skill-grader` agent grades it, so the numbers come the same way.
 
 ## 3. Read the result with them
 
@@ -30,6 +30,8 @@ Each run gets its own throwaway folder and may write only there. Nothing switche
 - **Passed as often without the skill**: those assertions prove nothing. Sharpen them.
 - **Blocked**: the run stopped on a permission headless mode can't ask for; it's left out of the numbers.
 - **Time and tokens**: a skill that helps but costs much more is worth knowing about.
+
+For the patterns the averages hide, start the `skill-analyzer` agent on the results.
 
 Open the review page it wrote (`review.html`) and ask them to look at the outputs. Their notes, saved as `feedback.json`, are what `skill-improve` fixes next.
 

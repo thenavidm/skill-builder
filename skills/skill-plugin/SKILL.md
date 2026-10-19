@@ -11,7 +11,7 @@ The engine runs as `npx -y @thenavidm/skill-builder@latest`; in the Skill Builde
 
 ## 1. Plan
 
-Use `skill-plan`: the jobs, what exists, which jobs are skills, agents or scripts, the routing prompts. Get their yes on the plan first.
+Use `skill-plan`, which starts the `skill-architect` agent: the jobs, what exists, which jobs are skills, agents or scripts, the routing prompts. Get their yes on the plan first.
 
 ## 2. The repository
 
