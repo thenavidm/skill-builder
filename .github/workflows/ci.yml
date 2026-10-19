@@ -28,3 +28,5 @@ jobs:
       # one, or a skill another tool would reject, fails here instead of in a
       # user's install.
       - run: node scripts/manifests/build.mjs --check
+      # The engine's tests: each format rule on a skill written for the test.
+      - run: node --test "test/*.test.mjs"
