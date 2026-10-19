@@ -1,6 +1,6 @@
 ---
 name: skill
-description: Builds, checks, tests and ships agent skills and whole plugins for Claude Code, Codex, Gemini CLI, Antigravity and Cursor. Use when someone wants to make, fix, test, measure, package or release a skill or plugin, or asks which Skill Builder command fits.
+description: Builds, tests and ships agent skills and plugins for Claude Code, Codex, Gemini CLI, Antigravity and Cursor. Use for anything about making or fixing skills or plugins.
 ---
 
 # Skill Builder

@@ -1,6 +1,6 @@
 ---
 name: skill-create
-description: Builds a new agent skill that captures how someone does a task, from a goal, this conversation, a screen recording or a brief, then proves it triggers and helps in each AI tool they use before installing it. Use when someone wants the AI to handle a task they repeat their way every time, or asks for a skill for it. Not for fixing an existing skill (skill-improve).
+description: Builds a new skill that does a task the user's way, from a goal, this chat or a brief, and proves it fires and helps before installing. Not for fixing one (skill-improve).
 ---
 
 # Create a skill
