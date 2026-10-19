@@ -20,6 +20,9 @@
  *                                                     for one run and its entry skill asked for
  *   skill-builder bench <skill> [--tools ...] [--runs 3]   the evals in every installed tool, side by side
  *   skill-builder overlap <ours> <theirs> [--min 8]   runs of words shared with another skill
+ *   skill-builder changelog [plugin]                  the commits since the last release, for the notes
+ *   skill-builder release [plugin] [--bump patch|minor|major|x.y.z] [--dry]
+ *                 the version bumped, the notes moved under it, the manifests rebuilt, then the steps
  */
 import { check } from "../lib/check.mjs";
 import { facts } from "../lib/facts.mjs";
@@ -35,6 +38,7 @@ import { writeReview } from "../lib/review.mjs";
 import { installTest } from "../lib/install.mjs";
 import { bench } from "../lib/bench.mjs";
 import { overlap } from "../lib/overlap.mjs";
+import { changesSinceTag, release, unreleased } from "../lib/release.mjs";
 import { BuildError } from "../scripts/manifests/build.mjs";
 import { basename } from "node:path";
 
@@ -329,7 +333,31 @@ switch (cmd) {
     if (runs.length) process.exitCode = 1;
     break;
   }
+  case "changelog": {
+    const root = resolve(args[0] ?? ".");
+    const c = changesSinceTag(root);
+    const notes = unreleased(readFileSync(join(root, "CHANGELOG.md"), "utf8"));
+    if (json) {
+      console.log(JSON.stringify({ ...c, unreleased: notes }, null, 2));
+      break;
+    }
+    console.log(`${c.commits.length} commits since ${c.since ?? "the start"}:`);
+    for (const line of c.commits) console.log(`  ${line}`);
+    console.log(`\nUnreleased in CHANGELOG.md now:\n${notes || "  (empty)"}`);
+    break;
+  }
+  case "release": {
+    const r = await release(args[0] ?? ".", { bump: flags.bump ?? "patch", dry: Boolean(flags.dry) });
+    if (json) {
+      console.log(JSON.stringify(r, null, 2));
+      break;
+    }
+    console.log(`${r.dry ? "Would release" : "Released"} ${r.from} -> ${r.version}, ${r.date}${r.dry ? " (nothing changed)" : ": package.json, CHANGELOG.md and every manifest updated"}.`);
+    console.log(`\nNotes:\n${r.notes}\n\nThe steps that reach live systems, each for a yes:`);
+    r.steps.forEach((st, i) => console.log(`${i + 1}. ${st.what}\n   ${st.run}`));
+    break;
+  }
   default:
-    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval|install|bench|overlap> <path> [options]");
+    console.error("usage: skill-builder <check|tokens|trigger|package|repo|eval|install|bench|overlap|changelog|release> <path> [options]");
     process.exitCode = 2;
 }
